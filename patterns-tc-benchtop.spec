@@ -415,7 +415,7 @@ Requires:       gamemode
 # Low-level parts that we need
 #
 # bnc#430161
-Requires:       NetworkManager-applet-gnome
+Requires:       NetworkManager-connection-editor
 Requires:       NetworkManager-pppoe
 Requires:       NetworkManager-strongswan
 Requires:       canberra-gtk-play
