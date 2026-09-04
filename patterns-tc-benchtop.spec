@@ -122,7 +122,8 @@ Requires:       microos-tools
 Requires:       snapper
 Requires:       vim
 #Requires:       neovim # Modern terminal environment — TCBL: stays commented; neovim rides the Homebrew channel (installer/README.md Brewfile)
-Requires:       tmux # Modern terminal environment
+# modern terminal environment
+Requires:       tmux
 Requires:       wtmpdb
 # people are addicted to sudo
 Requires:       sudo
@@ -319,7 +320,8 @@ Requires:       gsf-office-thumbnailer
 Requires:       jxl-thumbnailer
 Requires:       raw-thumbnailer
 Requires:       rsvg-thumbnailer
-Requires:       sushi # Note: Currently pulls in evince
+# sushi currently pulls in evince
+Requires:       sushi
 Requires:       totem-video-thumbnailer
 # So that GNOME shell extensions can be installed
 ## Requires:       chrome-gnome-shell
@@ -636,14 +638,14 @@ Requires:       clinfo
 ## TCBL: llamacpp package name/availability in TW to verify ⚠; NVIDIA-side
 ## (CUDA) intentionally absent here — arrives with the nvidia KMP against
 ## kernel-lts (obs/README.md).
-Requires:       llamacpp
+## Requires:       llamacpp   # TCBL: provided by our own llama.cpp package (packages repo), not the openSUSE build
 
 ### Remote management
 Requires:       cockpit
 ## TCBL: cockpit-firewalld existence as a TW package to verify ⚠ (firewall
 ## panel may be part of cockpit-networkmanager); patterns do not fail until
 ## install time, so wrong names here hide — M1 VM resolution check required.
-Requires:       cockpit-firewalld
+## Requires:       cockpit-firewalld   # TCBL: no such package; Cockpit firewall UI ships in cockpit-networkmanager (already required)
 Requires:       cockpit-machines
 Requires:       cockpit-networkmanager
 Requires:       cockpit-podman
