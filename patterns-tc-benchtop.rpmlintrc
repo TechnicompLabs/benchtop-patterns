@@ -1,0 +1,3 @@
+# Metapackage pattern: no binary payload, no documentation.
+addFilter("no-binary")
+addFilter("no-documentation")
