@@ -57,6 +57,7 @@ Requires:       build-key
 ## (os-release identity — see docs/build-plan.md §2 and merge-review.md).
 Requires:       distribution-release
 Requires:       filesystem
+Requires:       tc-benchtop-settings
 
 ### Packages formerly provided by bootloader
 Requires:       systemd-boot
