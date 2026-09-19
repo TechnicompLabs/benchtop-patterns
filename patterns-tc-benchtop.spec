@@ -247,6 +247,12 @@ Requires:       fwupd
 Requires:       gsettings-backend-dconf
 ## Requires:       distribution-logos-openSUSE-Aeon
 ## Requires:       gdm-branding-Aeon
+## TCBL: gdm-branding-Aeon pulled gdm in; dropping it with the Aeon
+## branding left the image with no display manager -> text-console boot.
+## Require gdm and pin its openSUSE branding (resolves the gdm-branding
+## choice, matching the other -openSUSE branding kept above for M1).
+Requires:       gdm
+Requires:       gdm-branding-openSUSE
 # gnome-initial-setup requirements
 Requires:       gnome-initial-setup
 Requires:       desktop-file-utils
@@ -274,8 +280,8 @@ Requires:       gnome-disk-utility
 # boo#1215343
 Requires:       gnome-backgrounds
 # implied by gdm
-#Requires: gnome-shell
-#Requires: gnome-settings-daemon
+Requires:       gnome-shell
+Requires:       gnome-settings-daemon
 # implied by gnome-shell
 #Requires:       gnome-control-center
 #
