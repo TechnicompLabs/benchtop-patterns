@@ -256,6 +256,9 @@ Requires:       gsettings-backend-dconf
 ## choice, matching the other -openSUSE branding kept above for M1).
 Requires:       gdm
 Requires:       gdm-branding-openSUSE
+# native gdm.service (enabled by openSUSE's default preset) instead of the
+# xdm wrapper, which brings xdm and its X11 tools
+Requires:       gdm-systemd
 # gnome-initial-setup requirements
 Requires:       gnome-initial-setup
 Requires:       desktop-file-utils
