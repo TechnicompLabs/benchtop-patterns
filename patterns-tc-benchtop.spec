@@ -128,6 +128,9 @@ Requires:       tmux
 Requires:       wtmpdb
 # people are addicted to sudo
 Requires:       sudo
+# wheel members authenticate with their own password for sudo and polkit
+# (openSUSE's default asks for root's password: sudo targetpw, polkit root admin)
+Requires:       sudo-policy-wheel-auth-self
 ## Requires:       systemd-presets-branding-Aeon
 ## TCBL: our preset package (service enable-list) lands in M1 as
 ## tc-benchtop-presets — see packages/tc-benchtop-settings/README.md.
