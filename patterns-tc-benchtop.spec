@@ -67,6 +67,9 @@ Requires:       sdbootutil-rpm-scriptlets
 Requires:       sdbootutil-snapper
 Requires:       shim
 Requires:       uefi_mbr
+# Plymouth in the initrd (splash and graphical disk-password prompt); openSUSE
+# installs it through Supplements, which the image build does not pull in
+Requires:       plymouth-dracut
 
 ### Packages formerly provided by base/basesystem
 Requires:       /usr/bin/hostname
