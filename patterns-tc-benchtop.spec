@@ -485,10 +485,8 @@ Requires:       tpm2.0-tools
 Requires:       mokutil
 
 ### x86_64_v3 support is mandatory
-# its service (enabled by tc-benchtop-settings' preset) adds the x86-64-v3
-# optimized libraries after each automatic update, only on CPUs that
-# support x86-64-v3; on older CPUs it does nothing
-Requires:       x86_64_v3-branding-Aeon
+# tc-benchtop-settings' tcbl-x86-64-v3.service installs the x86-64-v3
+# optimized libraries after automatic updates, on CPUs that support them
 
 ### Aeons partitions are defined to use systemd-repart
 # systemd-experimental is temproarily required for repart
@@ -660,16 +658,18 @@ Requires:       rocm-smi
 Requires:       rocm-clinfo
 Requires:       rocminfo
 Requires:       clinfo
-## TCBL: Tumbleweed packages llama.cpp as llamacpp; TCBL plans its own build
-## (packages repo) instead. NVIDIA-side (CUDA) intentionally absent here —
-## arrives with the nvidia KMP against kernel-lts (obs/README.md).
+## TCBL: Tumbleweed's llamacpp (ggml) has CPU, Vulkan, OpenCL and OpenVINO
+## backends but no CUDA or ROCm; TCBL plans its own build (packages repo).
+## NVIDIA-side (CUDA) intentionally absent here — arrives with the nvidia
+## KMP against kernel-lts (obs/README.md).
 ## Requires:       llamacpp
 
 ### Remote management
 Requires:       cockpit
-## TCBL: cockpit-firewalld only opens the firewall for Cockpit's web console
-## (port 9090); the firewall panel is in cockpit-networkmanager (below).
-## Requires:       cockpit-firewalld
+# opens the firewall for Cockpit's web console (port 9090), so Cockpit is
+# reachable from other machines; the firewall panel itself is in
+# cockpit-networkmanager
+Requires:       cockpit-firewalld
 Requires:       cockpit-machines
 Requires:       cockpit-networkmanager
 Requires:       cockpit-podman
