@@ -658,11 +658,14 @@ Requires:       rocm-smi
 Requires:       rocm-clinfo
 Requires:       rocminfo
 Requires:       clinfo
-## TCBL: Tumbleweed's llamacpp (ggml) has CPU, Vulkan, OpenCL and OpenVINO
-## backends but no CUDA or ROCm; TCBL plans its own build (packages repo).
+# Tumbleweed's llamacpp (ggml) has CPU, Vulkan, OpenCL and OpenVINO backends,
+# but no CUDA or ROCm.
 ## NVIDIA-side (CUDA) intentionally absent here — arrives with the nvidia
 ## KMP against kernel-lts (obs/README.md).
-## Requires:       llamacpp
+Requires:       llamacpp
+# the Vulkan backend (AMD, Intel and NVIDIA GPUs): libggml only recommends it,
+# and the image is built without recommended packages
+Requires:       libggml-vulkan
 
 ### Remote management
 Requires:       cockpit
