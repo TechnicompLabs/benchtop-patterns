@@ -382,11 +382,23 @@ Requires:       google-roboto-fonts
 Requires:       noto-coloremoji-fonts
 Requires:       noto-emoji-fonts
 Requires:       noto-sans-fonts
-## TCBL additions — Fonts.md required set, high-confidence subset (rest of
-## the list stays in package-inventory.md pending TW name verification ⚠):
+## TCBL additions — Fonts.md required set, names checked against Tumbleweed.
+## Atkinson Hyperlegible has no Tumbleweed font package; the faces
+## package-inventory.md lists as missing need first-party packages.
+Requires:       fira-code-fonts
+Requires:       gnu-unifont-otf-fonts
 Requires:       google-caladea-fonts
+Requires:       google-noto-sans-cjk-fonts
+Requires:       hack-fonts
+Requires:       ibm-plex-fonts
+Requires:       intel-one-mono-fonts
+Requires:       inter-fonts
+Requires:       jetbrains-mono-fonts
 Requires:       liberation-fonts
+Requires:       redhat-overpass-fonts
+Requires:       saja-cascadia-code-fonts
 Requires:       texlive-tex-gyre-fonts
+Requires:       ubuntu-fonts
 # So that GNOME keyring works
 Requires:       gcr-ssh-agent
 Requires:       gcr-ssh-askpass
@@ -473,14 +485,10 @@ Requires:       tpm2.0-tools
 Requires:       mokutil
 
 ### x86_64_v3 support is mandatory
-## Requires:       x86_64_v3-branding-Aeon
-## TCBL: commented out pending verification ⚠ — a bare package name
-## `x86_64_v3` almost certainly does not resolve (if it is a pattern, the
-## dependency should be `pattern() = <symbol>`; exact symbol unknown).
-## A wrong Requires here blocks installation of the whole pattern. Also
-## check against the Supported Models list: older Surface units may not be
-## x86-64-v3 capable. See merge-review.md.
-## Requires:       x86_64_v3 # Note: this is a pattern
+# its service (enabled by tc-benchtop-settings' preset) adds the x86-64-v3
+# optimized libraries after each automatic update, only on CPUs that
+# support x86-64-v3; on older CPUs it does nothing
+Requires:       x86_64_v3-branding-Aeon
 
 ### Aeons partitions are defined to use systemd-repart
 # systemd-experimental is temproarily required for repart
@@ -652,17 +660,16 @@ Requires:       rocm-smi
 Requires:       rocm-clinfo
 Requires:       rocminfo
 Requires:       clinfo
-## TCBL: llamacpp package name/availability in TW to verify ⚠; NVIDIA-side
-## (CUDA) intentionally absent here — arrives with the nvidia KMP against
-## kernel-lts (obs/README.md).
-## Requires:       llamacpp   # TCBL: provided by our own llama.cpp package (packages repo), not the openSUSE build
+## TCBL: Tumbleweed packages llama.cpp as llamacpp; TCBL plans its own build
+## (packages repo) instead. NVIDIA-side (CUDA) intentionally absent here —
+## arrives with the nvidia KMP against kernel-lts (obs/README.md).
+## Requires:       llamacpp
 
 ### Remote management
 Requires:       cockpit
-## TCBL: cockpit-firewalld existence as a TW package to verify ⚠ (firewall
-## panel may be part of cockpit-networkmanager); patterns do not fail until
-## install time, so wrong names here hide — M1 VM resolution check required.
-## Requires:       cockpit-firewalld   # TCBL: no such package; Cockpit firewall UI ships in cockpit-networkmanager (already required)
+## TCBL: cockpit-firewalld only opens the firewall for Cockpit's web console
+## (port 9090); the firewall panel is in cockpit-networkmanager (below).
+## Requires:       cockpit-firewalld
 Requires:       cockpit-machines
 Requires:       cockpit-networkmanager
 Requires:       cockpit-podman
