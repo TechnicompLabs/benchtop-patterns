@@ -135,8 +135,7 @@ Requires:       sudo
 # (openSUSE's default asks for root's password: sudo targetpw, polkit root admin)
 Requires:       sudo-policy-wheel-auth-self
 ## Requires:       systemd-presets-branding-Aeon
-## TCBL: our preset package (service enable-list) lands in M1 as
-## tc-benchtop-presets — see packages/tc-benchtop-settings/README.md.
+## TCBL: tc-benchtop-settings carries TCBL's presets (85-tcbl.preset) instead.
 Requires:       terminfo-base
 Requires:       timezone
 Conflicts:      gettext-runtime-mini
