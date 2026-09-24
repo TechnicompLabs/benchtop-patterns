@@ -578,10 +578,12 @@ Requires:       atop
 #Requires:       amdgpu_top
 #Requires:       intel-gpu-tools
 Requires:       ratbagd
+# rules only: until openSUSE takes the change, home:technicomp:benchtop carries a
+# branch of OpenRGB whose udev-rules subpackage does not require the app
 Requires:       OpenRGB-udev-rules
-## TCBL addition: Solaar for Logitech devices (Distro Vision.md QoL) —
-## package name in TW to verify ⚠ (expected: solaar).
-Requires:       solaar
+# udev rules only, for the Solaar Flatpak (Logitech receivers); openSUSE ships
+# them without Solaar itself
+Requires:       solaar-udev
 
 ### Developer Support
 # Requires:       bpftrace # OpenSUSE packaging requires GCC.  Need to repackage
