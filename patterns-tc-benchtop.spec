@@ -1,7 +1,7 @@
 #
 # spec file for package patterns-tc-benchtop
 #
-# Copyright (c) 2026 TechniComp Labs
+# Copyright (c) 2026 Technicomp Labs
 #
 # All modifications and additions to the file contributed by third parties
 # remain the property of their copyright owners, unless otherwise agreed
@@ -25,7 +25,7 @@
 Name:           patterns-tc-benchtop
 Version:        5.0
 Release:        0
-Summary:        Patterns for TechniComp Benchtop Linux
+Summary:        Patterns for Technicomp Benchtop Linux
 License:        MIT
 Group:          Metapackages
 URL:            http://en.opensuse.org/Patterns
@@ -38,7 +38,7 @@ of the installation source setup. Installation of this package does
 not make sense.
 
 %package base
-Summary:        TechniComp Benchtop Linux
+Summary:        Technicomp Benchtop Linux
 Group:          Metapackages
 Provides:       pattern() = tc-benchtop_base
 Provides:       pattern-category() = Benchtop
@@ -445,6 +445,10 @@ Requires:       gamemode
 Requires:       NetworkManager-connection-editor
 Requires:       NetworkManager-pppoe
 Requires:       NetworkManager-strongswan
+# strongSwan's editor plugins for GNOME Settings and the connection editor, and
+# its password prompt; openSUSE pulls this in only through Supplements, which
+# the image build does not follow
+Requires:       NetworkManager-applet-strongswan
 Requires:       canberra-gtk-play
 #
 # Branding
@@ -459,6 +463,10 @@ Requires:       canberra-gtk-play
 ## derivative).
 Requires:       gtk3-branding-openSUSE
 Requires:       gtk4-branding-openSUSE
+# Technicomp wallpaper and logos. Its distribution-logos-tc-benchtop takes the
+# place of openSUSE's logos, so openSUSE's boot splash, GDM login screen,
+# icons and Cockpit show the Technicomp logo.
+Requires:       tc-benchtop-branding
 
 ### Packages formerly provided by kiwi file
 ## TCBL: kernel-default is the M0/M1 placeholder; replaced by kernel-lts
@@ -684,7 +692,7 @@ Requires:       flatpak-remote-flathub
 
 
 %description base
-This is the TechniComp Benchtop Linux base system.
+This is the Technicomp Benchtop Linux base system.
 
 %prep
 # empty on purpose
