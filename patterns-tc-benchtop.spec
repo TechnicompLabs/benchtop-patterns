@@ -122,6 +122,10 @@ Requires:       iputils
 Requires:       kdump
 %endif
 Requires:       less
+# manual pages: the man program, and the pages for the Linux kernel and C
+# library interfaces
+Requires:       man
+Requires:       man-pages
 Requires:       microos-tools
 Requires:       snapper
 Requires:       vim
@@ -601,6 +605,11 @@ Requires:       solaar-udev
 ### Developer Support
 # Requires:       bpftrace # OpenSUSE packaging requires GCC.  Need to repackage
 ## TCBL: bpftrace repackaging → OBS backlog ✎ (merge-review.md).
+# C and C++ toolchain: pip, npm, cargo and go build native code with the
+# system compiler
+Requires:       gcc
+Requires:       gcc-c++
+Requires:       make
 Requires:       binutils
 Requires:       checksec
 Requires:       elfutils
@@ -608,6 +617,9 @@ Requires:       gdb
 Requires:       gdbserver
 Requires:       git
 Requires:       jq
+# CSV, TSV and JSON processing (mlr), in place of xsv, which is unmaintained
+# upstream
+Requires:       miller
 Requires:       patchelf
 Requires:       pax-utils
 # Requires:       pandoc-cli # OpenSUSE packaging pulls in all of Haskell. Need to repackage.
@@ -618,7 +630,6 @@ Requires:       rizin
 Requires:       sqlite3
 Requires:       tailscale
 Requires:       xxd
-Requires:       xsv
 Requires:       yq
 
 ### Database Support
@@ -631,7 +642,6 @@ Requires:       mariadb-client
 ## OBS repackaging (merge-review.md).
 Requires:       postgresql
 Requires:       psqlODBC
-Requires:       redis
 Requires:       sqliteodbc
 Requires:       unixODBC
 
