@@ -49,7 +49,7 @@ Provides:       pattern-order() = 9200
 Requires:       pattern() = update_test
 %endif
 
-### Packages formerly provided by minimal_base
+### Base system
 Requires:       branding
 Requires:       build-key
 ## TCBL: distribution-release is satisfied by openSUSE/MicroOS release packages
@@ -58,20 +58,6 @@ Requires:       build-key
 Requires:       distribution-release
 Requires:       filesystem
 Requires:       tc-benchtop-settings
-
-### Packages formerly provided by bootloader
-Requires:       systemd-boot
-Requires:       dracut-pcr-signature
-Requires:       efibootmgr
-Requires:       sdbootutil-rpm-scriptlets
-Requires:       sdbootutil-snapper
-Requires:       shim
-Requires:       uefi_mbr
-# Plymouth in the initrd (splash and graphical disk-password prompt); openSUSE
-# installs it through Supplements, which the image build does not pull in
-Requires:       plymouth-dracut
-
-### Packages formerly provided by base/basesystem
 Requires:       /usr/bin/hostname
 Requires:       aaa_base
 Requires:       bash
@@ -79,18 +65,11 @@ Requires:       bash
 ## login shell; a login shell must be a system RPM (/etc/shells), not brew.
 Requires:       zsh
 Requires:       branding-openSUSE
-Requires:       btrfsprogs
 Requires:       ca-certificates
 Requires:       ca-certificates-mozilla
 Requires:       coreutils
 Requires:       coreutils-systemd
 Requires:       glibc
-Requires:       NetworkManager
-Requires:       NetworkManager-bluetooth
-Requires:       NetworkManager-wifi
-# boo1230006
-Requires:       libmbim
-Requires:       iproute2
 Requires:       lastlog2
 Requires:       libnss_usrfiles2
 Requires:       openSUSE-build-key
@@ -103,21 +82,12 @@ Requires:       systemd
 Requires:       util-linux
 Requires:       group(nobody)
 Requires:       user(nobody)
-####
-Requires:       btrfsmaintenance
 Requires:       busybox
 Requires:       chrony
 # curl indirectly needed by ignition via dracut's url-lib
 Requires:       curl
-# probably needed for fsck.fat on efi partitions
-## TCBL: deduplicated — gzip and hostname each appeared three times in the
-## original (Requires + Suggests + Requires); one Requires each is kept
-## (gzip below under desktop-common, hostname via /usr/bin/hostname above).
-Requires:       dosfstools
 Requires:       glibc-locale-base
-Requires:       health-checker
-Requires:       health-checker-plugins-MicroOS
-Requires:       iputils
+Requires:       glibc-locale
 %ifnarch %{arm}
 Requires:       kdump
 %endif
@@ -126,8 +96,6 @@ Requires:       less
 # library interfaces
 Requires:       man
 Requires:       man-pages
-Requires:       microos-tools
-Requires:       snapper
 Requires:       vim
 #Requires:       neovim # Modern terminal environment — TCBL: stays commented; neovim rides the Homebrew channel (installer/README.md Brewfile)
 # modern terminal environment
@@ -146,23 +114,74 @@ Conflicts:      gettext-runtime-mini
 Conflicts:      krb5-mini
 Obsoletes:      suse-build-key < 12.1
 Requires:       yast2-logs
-# exfat is an important filesystem too boo#1222955
-Requires:       exfatprogs
+Requires:       bash-completion
+Requires:       wget
+Requires:       systemd-coredump
+Requires:       systemd-zram-service
+# More "comfortable" base package versions
+## TCBL: deduplicated — gzip and hostname each appeared three times in the
+## original (Requires + Suggests + Requires); one Requires each is kept
+## (hostname via /usr/bin/hostname above).
+Requires:       gzip
+Requires:       hostname
 
-### Packages formerly provided by base_zypper
+### Boot and first boot
+Requires:       systemd-boot
+Requires:       dracut-pcr-signature
+Requires:       efibootmgr
+Requires:       sdbootutil-rpm-scriptlets
+Requires:       sdbootutil-snapper
+Requires:       shim
+Requires:       uefi_mbr
+# Plymouth in the initrd (splash and graphical disk-password prompt); openSUSE
+# installs it through Supplements, which the image build does not pull in
+Requires:       plymouth-dracut
+# Boot Screens
+Requires:       plymouth
+## TCBL: kernel-default is the M0/M1 placeholder; replaced by kernel-lts
+## (verbatim kernel.org 6.18.y, obs/README.md) once that package builds — M2
+## images bake kernel-lts as the default boot entry.
+Requires:       kernel-default
+Requires:       ignition-dracut
+Requires:       combustion
+# Aeons partitions are defined to use systemd-repart
+# systemd-experimental is temproarily required for repart
+Requires:       systemd-experimental
+## Requires:       systemd-repart-branding-Aeon
+
+### Updates and snapshots
 Requires:       transactional-update
 Requires:       transactional-update-zypp-config
 Requires:       zypper
 # zypper ps is useless in transactional mode. It also checks for
 # /run/reboot-needed though which is created by transactional-update
 Requires:       zypper-needs-restarting
+Requires:       snapper
+Requires:       health-checker
+Requires:       health-checker-plugins-MicroOS
+Requires:       microos-tools
+# Desktop notifications about transactional update succeeding/failing
+# for the masses
+Requires:       transactional-update-notifier
+# Add aeon-check
+## Requires:       aeon-check
 
-### Packages formerly provided by defaults
+### Security
 Requires:       audit
-Requires:       systemd-coredump
+Requires:       container-selinux
+Requires:       policycoreutils
+Requires:       policycoreutils-python-utils
+Requires:       selinux-policy-targeted
+Requires:       selinux-tools
+Requires:       polkit-default-privs
+Requires:       firewalld
+# bug#1211835 - TPM2.0 support
+Requires:       tpm2-0-tss
+Requires:       tpm2.0-tools
+# Secureboot support
+Requires:       mokutil
 
-### Packages formerly provided by hardware
-Requires:       ethtool
+### Hardware support and firmware
 %ifnarch s390x
 Requires:       irqbalance
 %endif
@@ -170,80 +189,6 @@ Requires:       irqbalance
 Requires:       ucode-amd
 Requires:       ucode-intel
 %endif
-Requires:       fcoe-utils
-Requires:       hwinfo
-
-### Packages formerly provided by selinux
-Requires:       container-selinux
-Requires:       policycoreutils
-Requires:       policycoreutils-python-utils
-Requires:       selinux-policy-targeted
-Requires:       selinux-tools
-
-## Remove X Packages
-### Packages formerly provided by x11
-## Requires:       xf86-input-libinput
-## Requires:       xorg-x11-fonts-core
-## Requires:       xorg-x11-server
-
-### Packages formerly provided by desktop-common
-# PipeWire is the default sound server
-Requires:       gstreamer-plugin-pipewire
-Requires:       pipewire-alsa
-Requires:       pipewire-pulseaudio
-# Add JACK audio support
-Requires:       pipewire-jack
-# Support UCM Profiles boo#1218510
-Requires:       alsa-ucm-conf
-## TCBL: printing rebuilt per Printing.md ("IPP driverless only") — the
-## inherited Aeon vendor-driver stack contradicted the notes' explicit
-## exclusion list. Dropped: OpenPrintingPPDs, epson-inkjet-printer-escpr,
-## hplip-hpijs, printer-driver-brlaser. Added: ipp-usb (IPP-over-USB) and
-## sane-airscan (eSCL/WSD driverless scanning). ghostscript retained as a
-## cups-filters dependency. Full rationale in merge-review.md.
-Requires:       bluez-cups
-Requires:       cups
-Requires:       cups-filters2
-Requires:       cups-pk-helper
-Requires:       ghostscript
-Requires:       ipp-usb
-Requires:       system-config-printer-common
-Requires:       system-config-printer-dbus-service
-Requires:       udev-configure-printer
-# Support scanners boo#1214614
-Requires:       sane-backends
-Requires:       sane-airscan
-# Add thunderbolt device management (boo#1208150)
-Requires:       bolt
-Requires:       bolt-tools
-# Common tools
-Requires:       bash-completion
-Requires:       bluez-firmware
-Requires:       glibc-locale
-Requires:       hicolor-icon-theme-branding-openSUSE
-Requires:       polkit-default-privs
-Requires:       systemd-icon-branding-openSUSE
-Requires:       udisks2
-Requires:       unzip
-Requires:       upower
-Requires:       wget
-Requires:       xdg-utils
-# Support ntfs drives
-Requires:       ntfs-3g
-Requires:       ntfsprogs
-# More "comfortable" base package versions
-Requires:       gzip
-Requires:       hostname
-## TCBL: avahi unconditional (was %if is_opensuse) — mDNS/driverless
-## printing/scanning discovery is a hard requirement (Network Services.md,
-## Printing.md); avahi-utils added for debugging.
-Requires:       avahi
-Requires:       avahi-utils
-# Desktop notifications about transactional update succeeding/failing
-# for the masses
-Requires:       transactional-update-notifier
-# Needed by both GNOME and KDE for theming of GTK-based flatpak apps properly
-Requires:       xdg-desktop-portal-gtk
 # Needed to ensure MicroOS Desktop systems are be able to handle varied hardware out
 # of the box, and not only during the system installation.
 Requires:       kernel-firmware-all
@@ -251,8 +196,67 @@ Requires:       sof-firmware
 ## TCBL addition: firmware updates (fwupd) — Drivers and Firmware.md; GUI
 ## rides GNOME Software.
 Requires:       fwupd
+Requires:       bluez-firmware
+# Add thunderbolt device management (boo#1208150)
+Requires:       bolt
+Requires:       bolt-tools
+Requires:       upower
+# ensure laptop power support is there
+## Requires:       power-profiles-daemon
+## TCBL: tuned + tuned-ppd kept as-is — this resolves the July plan's open
+## item #5 (tuned over power-profiles-daemon, with ppd API compat via
+## tuned-ppd so the GNOME power panel keeps working).
+Requires:       tuned
+Requires:       tuned-ppd
+Requires:       switcheroo-control
+# x86_64_v3 support is mandatory
+# tc-benchtop-settings' tcbl-x86-64-v3.service installs the x86-64-v3
+# optimized libraries after automatic updates, on CPUs that support them
+# Support screen rotation boo#1222711
+Requires:       iio-sensor-proxy
+# Support Vulkan boo#1223443
+Requires:       libvulkan_radeon
+Requires:       libvulkan_intel
+# Video Decoding
+Requires:       Mesa-libva
+## TCBL: fixed syntax error — original read "Required        libva-utils"
+## (invalid tag; would fail the spec parse).
+Requires:       libva-utils
+## TCBL addition: Intel hardware video decode (Drivers and Firmware.md);
+## AMD is covered by Mesa. Legacy i965 driver intentionally omitted.
+Requires:       intel-media-driver
+# Support fingerprint scanners boo#1212071
+Requires:       fprintd
+Requires:       fprintd-pam
+# Support bluetooth filetransfer boo#1225682
+Requires:       bluez-obexd
+# Support wacom tablets
+Requires:       libinput-udev
+Requires:       ratbagd
+# rules only: until openSUSE takes the change, home:technicomp:benchtop carries a
+# branch of OpenRGB whose udev-rules subpackage does not require the app
+Requires:       OpenRGB-udev-rules
+# udev rules only, for the Solaar Flatpak (Logitech receivers); openSUSE ships
+# them without Solaar itself
+Requires:       solaar-udev
 
-### Packages formerly provided by desktop-gnome
+### Desktop
+# #591535
+## TCBL: gtk2-branding-openSUSE dropped — Distro Vision.md / Security
+## Architecture.md: "Drop all GTK2, Python2". Nothing else in this pattern
+## should pull GTK2; CI closure check enforces it (build plan).
+## TCBL: remaining openSUSE branding packages are TEMPORARY (fine for private
+## M1 testing; the M2 trademark gate replaces them with tc-benchtop-branding-*
+## before anything public — openSUSE marks must not ship in a modified public
+## derivative).
+Requires:       gtk3-branding-openSUSE
+Requires:       gtk4-branding-openSUSE
+# Technicomp wallpaper and logos. Its distribution-logos-tc-benchtop takes the
+# place of openSUSE's logos, so openSUSE's boot splash, GDM login screen,
+# icons and Cockpit show the Technicomp logo.
+Requires:       tc-benchtop-branding
+Requires:       hicolor-icon-theme-branding-openSUSE
+Requires:       systemd-icon-branding-openSUSE
 Requires:       gsettings-backend-dconf
 ## Requires:       distribution-logos-openSUSE-Aeon
 ## Requires:       gdm-branding-Aeon
@@ -271,20 +275,10 @@ Requires:       desktop-file-utils
 Requires:       gjs
 #Requires:       gnome-menus-branding-openSUSE
 Requires:       system-group-wheel
-
-### Accessibility packages (boo#1229268)
-Requires:       desktop-translations
-Requires:       orca
-Requires:       brltty
-Requires:       brltty-driver-speech-dispatcher
-Requires:       brltty-driver-at-spi2
-Requires:       brltty-driver-brlapi
-Requires:       speech-dispatcher
-Requires:       speech-dispatcher-module-espeak
-
-#
-# Now the real packages
-#
+## Remove X Packages
+## Requires:       xf86-input-libinput
+## Requires:       xorg-x11-fonts-core
+## Requires:       xorg-x11-server
 # #332596
 Requires:       gnome-keyring
 Requires:       gnome-keyring-pam
@@ -319,10 +313,6 @@ Requires:       gpgme
 Requires:       gnome-bluetooth
 # for display color profile support boo#1210492
 Requires:       gnome-control-center-color
-# for desktop remote access
-Requires:       gnome-remote-desktop
-# for shell remote access
-Requires:       openssh
 # needed to ensure bluetooth is enabled at startup (glgo#GNOME/gnome-bluetooth#110)
 Requires:       bluez-auto-enable-devices
 Requires:       gnome-control-center-goa
@@ -370,6 +360,51 @@ Requires:       gvfs-fuse
 Requires:       adwaita-icon-theme
 # We need this for accessability and the lack of it causes big performance issues (boo#1204564)
 Requires:       at-spi2-core
+# So that GNOME keyring works
+Requires:       gcr-ssh-agent
+Requires:       gcr-ssh-askpass
+Requires:       gcr3-ssh-askpass
+# So that GNOME prompt for ssh password works
+Requires:       openssh-askpass-gnome
+# So that GNOME pinentry works
+Requires:       pinentry-gnome3
+Requires:       gvfs-backend-samba
+Requires:       samba
+# So that GNOME builtin screen recorder works
+Requires:       gstreamer-plugins-bad
+Requires:       gstreamer-plugins-good
+# #509829
+Requires:       xdg-user-dirs-gtk
+Requires:       yelp
+# Polkit integration with GNOME
+Requires:       polkit-gnome
+# https://build.opensuse.org/request/show/921373
+Requires:       xdg-desktop-portal-gnome
+# Needed by both GNOME and KDE for theming of GTK-based flatpak apps properly
+Requires:       xdg-desktop-portal-gtk
+Requires:       xdg-utils
+# gnome-console as default terminal
+Requires:       gnome-console
+# Accessibility packages (boo#1229268)
+Requires:       desktop-translations
+Requires:       orca
+Requires:       brltty
+Requires:       brltty-driver-speech-dispatcher
+Requires:       brltty-driver-at-spi2
+Requires:       brltty-driver-brlapi
+Requires:       speech-dispatcher
+Requires:       speech-dispatcher-module-espeak
+# PipeWire is the default sound server
+Requires:       gstreamer-plugin-pipewire
+Requires:       pipewire-alsa
+Requires:       pipewire-pulseaudio
+# Add JACK audio support
+Requires:       pipewire-jack
+# Support UCM Profiles boo#1218510
+Requires:       alsa-ucm-conf
+Requires:       canberra-gtk-play
+
+### Fonts
 # Some fonts
 Requires:       adobe-sourcecodepro-fonts
 Requires:       adobe-sourcesanspro-fonts
@@ -403,48 +438,36 @@ Requires:       redhat-overpass-fonts
 Requires:       saja-cascadia-code-fonts
 Requires:       texlive-tex-gyre-fonts
 Requires:       ubuntu-fonts
-# So that GNOME keyring works
-Requires:       gcr-ssh-agent
-Requires:       gcr-ssh-askpass
-Requires:       gcr3-ssh-askpass
-# So that GNOME prompt for ssh password works
-Requires:       openssh-askpass-gnome
-# So that GNOME pinentry works
-Requires:       pinentry-gnome3
-Requires:       gvfs-backend-samba
-Requires:       samba
-# So that GNOME builtin screen recorder works
-Requires:       gstreamer-plugins-bad
-Requires:       gstreamer-plugins-good
-# #509829
-Requires:       xdg-user-dirs-gtk
-Requires:       yelp
-# Polkit integration with GNOME
-Requires:       polkit-gnome
-# https://build.opensuse.org/request/show/921373
-Requires:       xdg-desktop-portal-gnome
-# ensure laptop power support is there
-## Requires:       power-profiles-daemon
-## TCBL: tuned + tuned-ppd kept as-is — this resolves the July plan's open
-## item #5 (tuned over power-profiles-daemon, with ppd API compat via
-## tuned-ppd so the GNOME power panel keeps working).
-Requires:       tuned
-Requires:       tuned-ppd
 
+### Printing and scanning
+## TCBL: printing rebuilt per Printing.md ("IPP driverless only") — the
+## inherited Aeon vendor-driver stack contradicted the notes' explicit
+## exclusion list. Dropped: OpenPrintingPPDs, epson-inkjet-printer-escpr,
+## hplip-hpijs, printer-driver-brlaser. Added: ipp-usb (IPP-over-USB) and
+## sane-airscan (eSCL/WSD driverless scanning). ghostscript retained as a
+## cups-filters dependency. Full rationale in merge-review.md.
+Requires:       bluez-cups
+Requires:       cups
+Requires:       cups-filters2
+Requires:       cups-pk-helper
+Requires:       ghostscript
+Requires:       ipp-usb
+Requires:       system-config-printer-common
+Requires:       system-config-printer-dbus-service
+Requires:       udev-configure-printer
+# Support scanners boo#1214614
+Requires:       sane-backends
+Requires:       sane-airscan
 
-## Gaming Support
-# add steam-devices
-Requires:       steam-devices
-Requires:       selinux-policy-targeted-gaming
-Requires:       system-user-games
-## TCBL addition: gamemode — Gaming Mode.md (THP toggle scripts hook into it;
-## see tc-benchtop-settings). mangohud/gamescope stay in the inventory for the
-## gaming sub-pattern decision.
-Requires:       gamemode
-
-#
-# Low-level parts that we need
-#
+### Networking
+Requires:       NetworkManager
+Requires:       NetworkManager-bluetooth
+Requires:       NetworkManager-wifi
+# boo1230006
+Requires:       libmbim
+Requires:       iproute2
+Requires:       iputils
+Requires:       ethtool
 # bnc#430161
 Requires:       NetworkManager-connection-editor
 Requires:       NetworkManager-pppoe
@@ -453,136 +476,80 @@ Requires:       NetworkManager-strongswan
 # its password prompt; openSUSE pulls this in only through Supplements, which
 # the image build does not follow
 Requires:       NetworkManager-applet-strongswan
-Requires:       canberra-gtk-play
-#
-# Branding
-#
-# #591535
-## TCBL: gtk2-branding-openSUSE dropped — Distro Vision.md / Security
-## Architecture.md: "Drop all GTK2, Python2". Nothing else in this pattern
-## should pull GTK2; CI closure check enforces it (build plan).
-## TCBL: remaining openSUSE branding packages are TEMPORARY (fine for private
-## M1 testing; the M2 trademark gate replaces them with tc-benchtop-branding-*
-## before anything public — openSUSE marks must not ship in a modified public
-## derivative).
-Requires:       gtk3-branding-openSUSE
-Requires:       gtk4-branding-openSUSE
-# Technicomp wallpaper and logos. Its distribution-logos-tc-benchtop takes the
-# place of openSUSE's logos, so openSUSE's boot splash, GDM login screen,
-# icons and Cockpit show the Technicomp logo.
-Requires:       tc-benchtop-branding
+## TCBL: avahi unconditional (was %if is_opensuse) — mDNS/driverless
+## printing/scanning discovery is a hard requirement (Network Services.md,
+## Printing.md); avahi-utils added for debugging.
+Requires:       avahi
+Requires:       avahi-utils
+Requires:       mtr
+Requires:       tcpdump
+Requires:       tailscale
 
-### Packages formerly provided by kiwi file
-## TCBL: kernel-default is the M0/M1 placeholder; replaced by kernel-lts
-## (verbatim kernel.org 6.18.y, obs/README.md) once that package builds — M2
-## images bake kernel-lts as the default boot entry.
-Requires:       kernel-default
-### systemd-zram stuff
-Requires:       systemd-zram-service
-### Virtualisation support
-Requires:       spice-vdagent
-Requires:       qemu-guest-agent
-### Container / Distrobox boo#1222909
-Requires:       distrobox
-Requires:       podman
+### Remote access and management
+# for desktop remote access
+Requires:       gnome-remote-desktop
+# for shell remote access
+Requires:       openssh
+Requires:       cockpit
+# opens the firewall for Cockpit's web console (port 9090), so Cockpit is
+# reachable from other machines; the firewall panel itself is in
+# cockpit-networkmanager
+Requires:       cockpit-firewalld
+Requires:       cockpit-machines
+Requires:       cockpit-networkmanager
+Requires:       cockpit-podman
+Requires:       cockpit-selinux
+Requires:       cockpit-storaged
 
-### Firewall Support
-Requires:       firewalld
-
-# bug#1211835 - TPM2.0 support
-Requires:       tpm2-0-tss
-Requires:       tpm2.0-tools
-
-# Secureboot support
-Requires:       mokutil
-
-### x86_64_v3 support is mandatory
-# tc-benchtop-settings' tcbl-x86-64-v3.service installs the x86-64-v3
-# optimized libraries after automatic updates, on CPUs that support them
-
-### Aeons partitions are defined to use systemd-repart
-# systemd-experimental is temproarily required for repart
-Requires:       systemd-experimental
-## Requires:       systemd-repart-branding-Aeon
-
-### Firstboot Configuration
-Requires:       ignition-dracut
-Requires:       combustion
-
-### Support screen rotation boo#1222711
-Requires:       iio-sensor-proxy
-
-### Support Vulkan boo#1223443
-Requires:       libvulkan_radeon
-Requires:       libvulkan_intel
-
-### Support fingerprint scanners boo#1212071
-Requires:       fprintd
-Requires:       fprintd-pam
-
-### Support bluetooth filetransfer boo#1225682
-Requires:       bluez-obexd
-
-### Support CIFS mounting via mount boo#1216138
-Requires:       cifs-utils
-
-### Support wacom tablets
-Requires:       libinput-udev
-
-### Add aeon-check
-## Requires:       aeon-check
-
-### gnome-console as default terminal
-Requires:       gnome-console
-
-### Add switcheroo-control
-Requires:       switcheroo-control
-
-## Video Decoding
-Requires:       Mesa-libva
-## TCBL: fixed syntax error — original read "Required        libva-utils"
-## (invalid tag; would fail the spec parse).
-Requires:       libva-utils
-## TCBL addition: Intel hardware video decode (Drivers and Firmware.md);
-## AMD is covered by Mesa. Legacy i965 driver intentionally omitted.
-Requires:       intel-media-driver
-
-## Boot Screens
-Requires:       plymouth
-
-## Additional Filesystem Support
+### Storage and file systems
+Requires:       btrfsprogs
+Requires:       btrfsmaintenance
+# probably needed for fsck.fat on efi partitions
+Requires:       dosfstools
+# exfat is an important filesystem too boo#1222955
+Requires:       exfatprogs
+# Support ntfs drives
+Requires:       ntfs-3g
+Requires:       ntfsprogs
 Requires:       e2fsprogs
 Requires:       f2fs-tools
 Requires:       xfsprogs-scrub
 ## TCBL addition: squashfuse (Filesystems.md FUSE list; live/appimage use).
 Requires:       squashfuse
+Requires:       fuse
+Requires:       fuse3
+Requires:       udisks2
+# Support CIFS mounting via mount boo#1216138
+Requires:       cifs-utils
+Requires:       fcoe-utils
+Requires:       rclone
 
-## Hardware and Low-level Tools
-Requires:       acpi
-Requires:       acpica
-Requires:       clinfo
-Requires:       cpupower
-Requires:       dmidecode
-Requires:       flashrom
-Requires:       hdparm
-Requires:       i2c-tools
-#Requires:       inxi
-Requires:       lsscsi
-Requires:       ltrace
-Requires:       Mesa-demo-x
-Requires:       mtr
-Requires:       numactl
-Requires:       nvme-cli
-Requires:       pciutils
-Requires:       rasdaemon
-Requires:       smartmontools
-Requires:       strace
-Requires:       stress-ng
-Requires:       tcpdump
-Requires:       usbutils
-Requires:       vulkan-tools
+### Archives
+Requires:       7zip
+Requires:       arj
+Requires:       lzfse
+Requires:       lzip
+Requires:       rzip
+Requires:       unar
+Requires:       unzip
+Requires:       zip
+Requires:       mkisofs
+Requires:       udftools
 
-## System Monitoring (CLI)
+### Virtualization, containers and infrastructure
+Requires:       spice-vdagent
+Requires:       qemu-guest-agent
+# Container / Distrobox boo#1222909
+Requires:       distrobox
+Requires:       podman
+Requires:       buildah
+Requires:       helm
+Requires:       kubernetes-client
+Requires:       kustomize
+Requires:       skopeo
+Requires:       opentofu
+
+### System monitoring
 Requires:       htop
 Requires:       iotop-c
 Requires:       nvtop
@@ -591,48 +558,194 @@ Requires:       nethogs
 Requires:       powertop
 Requires:       atop
 
-### Additional Hardware Support
+### Hardware diagnostics
+Requires:       acpi
+Requires:       acpica
+Requires:       clinfo
+Requires:       cpupower
+Requires:       dmidecode
+Requires:       flashrom
+Requires:       hdparm
+Requires:       hwinfo
+Requires:       i2c-tools
+#Requires:       inxi
+Requires:       lsscsi
+Requires:       Mesa-demo-x
+Requires:       numactl
+Requires:       nvme-cli
+Requires:       pciutils
+Requires:       rasdaemon
+Requires:       smartmontools
+Requires:       stress-ng
+Requires:       usbutils
+Requires:       vulkan-tools
 #Requires:       amdgpu_top
 #Requires:       intel-gpu-tools
-Requires:       ratbagd
-# rules only: until openSUSE takes the change, home:technicomp:benchtop carries a
-# branch of OpenRGB whose udev-rules subpackage does not require the app
-Requires:       OpenRGB-udev-rules
-# udev rules only, for the Solaar Flatpak (Logitech receivers); openSUSE ships
-# them without Solaar itself
-Requires:       solaar-udev
 
-### Developer Support
-# Requires:       bpftrace # OpenSUSE packaging requires GCC.  Need to repackage
-## TCBL: bpftrace repackaging → OBS backlog ✎ (merge-review.md).
+### Programming languages
 # C and C++ toolchain: pip, npm, cargo and go build native code with the
 # system compiler
 Requires:       gcc
 Requires:       gcc-c++
+Requires:       clang
+Requires:       llvm
+Requires:       lld
+
+# x86 assembler (GNU as comes with binutils)
+Requires:       nasm
+
+# Other GCC languages
+Requires:       gcc-ada
+Requires:       gcc-algol68
+Requires:       gcc-cobol
+Requires:       gcc-d
+Requires:       gcc-fortran
+Requires:       gcc-m2
+Requires:       gcc-obj-c++
+Requires:       gcc-objc
+
+# D package manager
+Requires:       dub
+
+# Python
+# Interpreter and venv are already installed
+Requires:       python3-pip
+Requires:       python3-devel
+Requires:       python3-curses
+Requires:       python3-dbm
+Requires:       python3-tk
+
+# Ruby (RubyGems and Bundler are part of Ruby)
+Requires:       ruby
+Requires:       ruby-devel
+
+# Java
+Requires:       java-devel
+Requires:       maven
+
+# Kotlin
+# TODO: package Kotlin for Benchtop/OBS.
+# No satisfactory official Tumbleweed compiler package is currently available.
+
+# Go
+Requires:       go
+
+# Rust
+Requires:       rust
+Requires:       cargo
+
+# JavaScript
+Requires:       nodejs-default
+Requires:       npm-default
+
+# Lua
+Requires:       lua
+Requires:       lua-devel
+Requires:       lua54-luarocks
+
+# Tcl/Tk
+Requires:       tcl
+Requires:       tk
+
+# R
+Requires:       R-base
+
+# GNU Octave: the interpreter without the Qt interface, which comes from
+# Flathub, and mkoctfile, which pkg install uses to compile extensions
+Requires:       octave-cli
+Requires:       octave-devel
+
+# Julia
+# TODO: package the Julia runtime directly for Benchtop/OBS.
+# Do not use juliaup; Benchtop should ship the rolling runtime itself.
+
+# Erlang and Elixir
+Requires:       erlang
+Requires:       erlang-rebar3
+Requires:       elixir
+Requires:       elixir-hex
+
+# Haskell
+Requires:       ghc
+Requires:       cabal-install
+
+# OCaml
+Requires:       ocaml
+Requires:       opam
+
+# Common Lisp
+Requires:       sbcl
+
+# Scheme
+Requires:       guile
+
+# Racket
+Requires:       racket
+
+# Nim
+Requires:       nim
+
+# .NET / C# / F#
+# TODO: package the current .NET SDK/runtime for Benchtop/OBS.
+# Tumbleweed does not currently provide an official modern dotnet-sdk package.
+# Do not substitute Mono; it is not equivalent to the current .NET SDK.
+
+# Dart
+# TODO: evaluate/package Dart SDK for Benchtop/OBS.
+# No official Tumbleweed package currently suitable for the base image.
+
+# Swift
+# TODO: evaluate/package the upstream Swift toolchain for Benchtop/OBS
+# if native Linux Swift is considered part of the supported language set.
+
+### Build tools
+Requires:       autoconf
+Requires:       automake
+Requires:       bison
+Requires:       cmake-full
+# builds Flatpaks from manifests; runtimes and SDKs download per user
+Requires:       flatpak-builder
+Requires:       flex
+Requires:       libtool
 Requires:       make
+Requires:       meson
+Requires:       ninja
+Requires:       patch
+Requires:       pkgconf-pkg-config
+
+### Version control
+Requires:       git
+# large files (media, datasets, model weights) kept outside the repository;
+# some Flatpak manifest sources use it too
+Requires:       git-lfs
+
+### Debugging and binary analysis
+# Requires:       bpftrace # OpenSUSE packaging requires GCC.  Need to repackage
+## TCBL: bpftrace repackaging → OBS backlog ✎ (merge-review.md).
 Requires:       binutils
 Requires:       checksec
 Requires:       elfutils
 Requires:       gdb
 Requires:       gdbserver
-Requires:       git
+Requires:       ltrace
+Requires:       patchelf
+Requires:       pax-utils
+Requires:       rizin
+Requires:       strace
+Requires:       xxd
+
+### Data processing
 Requires:       jq
 # CSV, TSV and JSON processing (mlr), in place of xsv, which is unmaintained
 # upstream
 Requires:       miller
-Requires:       patchelf
-Requires:       pax-utils
+Requires:       yq
 # Requires:       pandoc-cli # OpenSUSE packaging pulls in all of Haskell. Need to repackage.
 ## TCBL: pandoc moves to the Homebrew channel (already in the default
 ## Brewfile, installer/README.md) — no repackaging needed.
-Requires:       rclone
-Requires:       rizin
-Requires:       sqlite3
-Requires:       tailscale
-Requires:       xxd
-Requires:       yq
 
-### Database Support
+### Databases
+Requires:       sqlite3
 Requires:       libtdsodbc0
 Requires:       mariadb-connector-odbc
 Requires:       mariadb-client
@@ -645,37 +758,13 @@ Requires:       psqlODBC
 Requires:       sqliteodbc
 Requires:       unixODBC
 
-### Container Support
-Requires:       buildah
-Requires:       helm
-Requires:       kubernetes-client
-Requires:       kustomize
-Requires:       skopeo
-Requires:       opentofu
-
-### Filesystem in Userspace Support
-Requires:       fuse
-Requires:       fuse3
-
-### Archive Support
-Requires:       7zip
-Requires:       arj
-Requires:       lzfse
-Requires:       lzip
-Requires:       rzip
-Requires:       unar
-Requires:       zip
-Requires:       mkisofs
-Requires:       udftools
-
-### AI and Language Models
+### AI and language models
 Requires:       libnuma1
 Requires:       librocm-core1
 Requires:       rocm-hip
 Requires:       rocm-smi
 Requires:       rocm-clinfo
 Requires:       rocminfo
-Requires:       clinfo
 # Tumbleweed's llamacpp (ggml) has CPU, Vulkan, OpenCL and OpenVINO backends,
 # but no CUDA or ROCm.
 ## NVIDIA-side (CUDA) intentionally absent here — arrives with the nvidia
@@ -685,21 +774,18 @@ Requires:       llamacpp
 # and the image is built without recommended packages
 Requires:       libggml-vulkan
 
-### Remote management
-Requires:       cockpit
-# opens the firewall for Cockpit's web console (port 9090), so Cockpit is
-# reachable from other machines; the firewall panel itself is in
-# cockpit-networkmanager
-Requires:       cockpit-firewalld
-Requires:       cockpit-machines
-Requires:       cockpit-networkmanager
-Requires:       cockpit-podman
-Requires:       cockpit-selinux
-Requires:       cockpit-storaged
+### Gaming
+# add steam-devices
+Requires:       steam-devices
+Requires:       selinux-policy-targeted-gaming
+Requires:       system-user-games
+## TCBL addition: gamemode — Gaming Mode.md (THP toggle scripts hook into it;
+## see tc-benchtop-settings). mangohud/gamescope stay in the inventory for the
+## gaming sub-pattern decision.
+Requires:       gamemode
 
-### User-added Software
+### User-added software
 Requires:       flatpak-remote-flathub
-
 
 %description base
 This is the Technicomp Benchtop Linux base system.
