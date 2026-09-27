@@ -88,9 +88,6 @@ Requires:       chrony
 Requires:       curl
 Requires:       glibc-locale-base
 Requires:       glibc-locale
-%ifnarch %{arm}
-Requires:       kdump
-%endif
 Requires:       less
 # manual pages: the man program, and the pages for the Linux kernel and C
 # library interfaces
@@ -112,6 +109,9 @@ Requires:       terminfo-base
 Requires:       timezone
 Conflicts:      gettext-runtime-mini
 Conflicts:      krb5-mini
+# openSUSE:Factory prefers this build-only variant when building packages;
+# sleuthkit's libewf would otherwise bring it into the image
+Conflicts:      libuna1-mini
 Obsoletes:      suse-build-key < 12.1
 Requires:       yast2-logs
 Requires:       bash-completion
@@ -239,6 +239,12 @@ Requires:       OpenRGB-udev-rules
 # udev rules only, for the Solaar Flatpak (Logitech receivers); openSUSE ships
 # them without Solaar itself
 Requires:       solaar-udev
+# Hybrid graphics and ASUS laptops, held back: supergfxctl is in Tumbleweed,
+# but openSUSE's preset starts supergfxd on every machine, and its udev rule
+# turns on runtime power management for every NVIDIA GPU. asusctl is not in
+# Tumbleweed and is to be packaged in home:technicomp:benchtop.
+#Requires:       supergfxctl
+#Requires:       asusctl
 
 ### Desktop
 # #591535
@@ -301,6 +307,9 @@ Requires:       gnome-session-default-session
 Requires:       gnome-session-wayland
 # boo#1090117
 Requires:       flatpak
+# Flathub is added to each user's own installation (tcbl-flathub.service in
+# tc-benchtop-settings), not system-wide; config.kiwi keeps openSUSE's
+# flatpak-remote-flathub out
 ## Requires:       gnome-branding-Aeon
 Requires:       gnome-color-manager
 #Requires:       gnome-packagekit
@@ -369,7 +378,6 @@ Requires:       openssh-askpass-gnome
 # So that GNOME pinentry works
 Requires:       pinentry-gnome3
 Requires:       gvfs-backend-samba
-Requires:       samba
 # So that GNOME builtin screen recorder works
 Requires:       gstreamer-plugins-bad
 Requires:       gstreamer-plugins-good
@@ -465,9 +473,6 @@ Requires:       NetworkManager-bluetooth
 Requires:       NetworkManager-wifi
 # boo1230006
 Requires:       libmbim
-Requires:       iproute2
-Requires:       iputils
-Requires:       ethtool
 # bnc#430161
 Requires:       NetworkManager-connection-editor
 Requires:       NetworkManager-pppoe
@@ -476,20 +481,46 @@ Requires:       NetworkManager-strongswan
 # its password prompt; openSUSE pulls this in only through Supplements, which
 # the image build does not follow
 Requires:       NetworkManager-applet-strongswan
+Requires:       NetworkManager-openvpn
+Requires:       NetworkManager-applet-openvpn
+Requires:       NetworkManager-openconnect
+Requires:       NetworkManager-applet-openconnect
+# WireGuard's tools; NetworkManager handles WireGuard connections itself
+Requires:       wireguard-tools
+Requires:       tailscale
 ## TCBL: avahi unconditional (was %if is_opensuse) — mDNS/driverless
 ## printing/scanning discovery is a hard requirement (Network Services.md,
 ## Printing.md); avahi-utils added for debugging.
 Requires:       avahi
 Requires:       avahi-utils
+Requires:       iproute2
+Requires:       iputils
+Requires:       ethtool
 Requires:       mtr
 Requires:       tcpdump
-Requires:       tailscale
+# packet capture and analysis without the GUI: tshark, dumpcap, editcap,
+# capinfos and others (the Qt interface is wireshark-ui-qt); administrators
+# capture without root through tc-benchtop-settings
+Requires:       wireshark
+# throughput (iperf3) and route diagnostics
+Requires:       iperf
+Requires:       traceroute
+# DNS: dig, host, nslookup
+Requires:       bind-utils
+Requires:       netcat-openbsd
+Requires:       socat
+Requires:       whois
+# Nmap is in openSUSE's non-free repository (openSUSE:Factory:NonFree, Nmap
+# Public Source License), which the image build does not use
+#Requires:       nmap
 
 ### Remote access and management
 # for desktop remote access
 Requires:       gnome-remote-desktop
 # for shell remote access
 Requires:       openssh
+# mobile shell: sessions survive roaming, sleep and changing networks
+Requires:       mosh
 Requires:       cockpit
 # opens the firewall for Cockpit's web console (port 9090), so Cockpit is
 # reachable from other machines; the firewall panel itself is in
@@ -500,6 +531,22 @@ Requires:       cockpit-networkmanager
 Requires:       cockpit-podman
 Requires:       cockpit-selinux
 Requires:       cockpit-storaged
+
+### File sharing, remote file systems and synchronization
+# Windows file sharing: the Samba server (off until configured) and its client
+# tools (smbclient)
+Requires:       samba
+Requires:       samba-client
+# Support CIFS mounting via mount boo#1216138
+Requires:       cifs-utils
+# NFS client and server (the server is off until configured), and NFSv4 ACLs
+Requires:       nfs-client
+Requires:       nfs-kernel-server
+Requires:       nfs4-acl-tools
+# SSH file system, and synchronization
+Requires:       sshfs
+Requires:       rsync
+Requires:       rclone
 
 ### Storage and file systems
 Requires:       btrfsprogs
@@ -513,16 +560,29 @@ Requires:       ntfs-3g
 Requires:       ntfsprogs
 Requires:       e2fsprogs
 Requires:       f2fs-tools
+Requires:       xfsprogs
 Requires:       xfsprogs-scrub
 ## TCBL addition: squashfuse (Filesystems.md FUSE list; live/appimage use).
 Requires:       squashfuse
 Requires:       fuse
 Requires:       fuse3
 Requires:       udisks2
-# Support CIFS mounting via mount boo#1216138
-Requires:       cifs-utils
 Requires:       fcoe-utils
-Requires:       rclone
+# partitioning, software RAID, LVM and disk encryption
+Requires:       parted
+Requires:       gptfdisk
+Requires:       mdadm
+Requires:       lvm2
+Requires:       cryptsetup
+# data recovery and file system forensics
+Requires:       gnu_ddrescue
+Requires:       testdisk
+Requires:       sleuthkit
+
+### Backup
+# deduplicating, encrypted backups (Snapper keeps the system snapshots)
+Requires:       restic
+Requires:       borgbackup
 
 ### Archives
 Requires:       7zip
@@ -548,6 +608,8 @@ Requires:       kubernetes-client
 Requires:       kustomize
 Requires:       skopeo
 Requires:       opentofu
+# configuration management; collections come from ansible-galaxy
+Requires:       ansible-core
 
 ### System monitoring
 Requires:       htop
@@ -557,6 +619,23 @@ Requires:       iftop
 Requires:       nethogs
 Requires:       powertop
 Requires:       atop
+# sar, iostat, mpstat and pidstat (its data collection is off until enabled)
+Requires:       sysstat
+# open files, and process tools (killall, fuser, pstree)
+Requires:       lsof
+Requires:       psmisc
+
+### Performance analysis and tracing
+# Keep this aligned with Benchtop's kernel-lts when that replaces
+# kernel-default.
+Requires:       perf
+# eBPF
+Requires:       bpftool
+Requires:       bpftrace
+Requires:       bpftrace-tools
+Requires:       bpftop
+# storage and I/O testing
+Requires:       fio
 
 ### Hardware diagnostics
 Requires:       acpi
@@ -564,6 +643,7 @@ Requires:       acpica
 Requires:       clinfo
 Requires:       cpupower
 Requires:       dmidecode
+Requires:       edid-decode
 Requires:       flashrom
 Requires:       hdparm
 Requires:       hwinfo
@@ -575,12 +655,20 @@ Requires:       numactl
 Requires:       nvme-cli
 Requires:       pciutils
 Requires:       rasdaemon
+Requires:       sdparm
+Requires:       sensors
+Requires:       sg3_utils
 Requires:       smartmontools
 Requires:       stress-ng
 Requires:       usbutils
 Requires:       vulkan-tools
-#Requires:       amdgpu_top
-#Requires:       intel-gpu-tools
+# Intel GPU tools (intel_gpu_top and others)
+%ifarch %ix86 x86_64
+Requires:       intel-gpu-tools
+%endif
+# AMD GPU usage and sensors (tc-benchtop-settings-rpm leaves out its terminal
+# launcher)
+Requires:       amdgpu_top
 
 ### Programming languages
 # C and C++ toolchain: pip, npm, cargo and go build native code with the
@@ -619,9 +707,19 @@ Requires:       python3-tk
 Requires:       ruby
 Requires:       ruby-devel
 
+# Perl (cpan is part of Perl)
+Requires:       perl
+
 # Java
 Requires:       java-devel
 Requires:       maven
+
+# Scala
+# TODO: package Scala 3 and a build tool for Benchtop/OBS. Tumbleweed has
+# scala 2.13.12, which predates support for JDK 25, the JDK java-devel
+# installs (Scala's compatibility table starts at 2.13.17), and no sbt, the
+# usual Scala build tool.
+#Requires:       scala
 
 # Kotlin
 # TODO: package Kotlin for Benchtop/OBS.
@@ -637,6 +735,22 @@ Requires:       cargo
 # JavaScript
 Requires:       nodejs-default
 Requires:       npm-default
+
+# PHP, with the extensions a default PHP build enables, which Tumbleweed
+# packages separately
+Requires:       php8-cli
+Requires:       php8-devel
+Requires:       php-composer2
+Requires:       php8-ctype
+Requires:       php8-dom
+Requires:       php8-fileinfo
+Requires:       php8-iconv
+Requires:       php8-pdo
+Requires:       php8-posix
+Requires:       php8-sqlite
+Requires:       php8-tokenizer
+Requires:       php8-xmlreader
+Requires:       php8-xmlwriter
 
 # Lua
 Requires:       lua
@@ -682,8 +796,18 @@ Requires:       guile
 # Racket
 Requires:       racket
 
+# Clojure, with Leiningen for projects and dependencies
+Requires:       clojure
+Requires:       leiningen
+
 # Nim
 Requires:       nim
+
+# Zig
+# benchtop-zig: a Benchtop-owned selector package that requires the Zig series
+# Benchtop designates; update it when Tumbleweed's desired Zig generation
+# changes. Not yet packaged.
+#Requires:       benchtop-zig
 
 # .NET / C# / F#
 # TODO: package the current .NET SDK/runtime for Benchtop/OBS.
@@ -702,6 +826,8 @@ Requires:       nim
 Requires:       autoconf
 Requires:       automake
 Requires:       bison
+# compiler cache
+Requires:       ccache
 Requires:       cmake-full
 # builds Flatpaks from manifests; runtimes and SDKs download per user
 Requires:       flatpak-builder
@@ -718,31 +844,62 @@ Requires:       git
 # large files (media, datasets, model weights) kept outside the repository;
 # some Flatpak manifest sources use it too
 Requires:       git-lfs
+# GitHub's command-line tool
+Requires:       gh
+# Jujutsu (jj), a Git-compatible version control system
+Requires:       jujutsu
+# other version control systems, current and historical
+Requires:       mercurial
+Requires:       subversion
+Requires:       fossil
+Requires:       cvs
+Requires:       rcs
+# Breezy (Bazaar's maintained successor) is not in Tumbleweed; to be packaged
+#Requires:       breezy
 
 ### Debugging and binary analysis
-# Requires:       bpftrace # OpenSUSE packaging requires GCC.  Need to repackage
-## TCBL: bpftrace repackaging → OBS backlog ✎ (merge-review.md).
 Requires:       binutils
 Requires:       checksec
 Requires:       elfutils
 Requires:       gdb
 Requires:       gdbserver
+Requires:       hexedit
 Requires:       ltrace
 Requires:       patchelf
 Requires:       pax-utils
 Requires:       rizin
+# Ghidra's decompiler for rizin
+Requires:       rz-ghidra
 Requires:       strace
+Requires:       valgrind
 Requires:       xxd
 
-### Data processing
+### Security auditing and analysis
+# host auditing: OpenSCAP with the SCAP Security Guide policies
+Requires:       openscap-utils
+Requires:       scap-security-guide
+# malware signatures (YARA), firmware images (binwalk) and file metadata
+Requires:       yara
+Requires:       binwalk
+Requires:       exiftool
+
+### Data processing and documents
 Requires:       jq
 # CSV, TSV and JSON processing (mlr), in place of xsv, which is unmaintained
 # upstream
 Requires:       miller
 Requires:       yq
-# Requires:       pandoc-cli # OpenSUSE packaging pulls in all of Haskell. Need to repackage.
-## TCBL: pandoc moves to the Homebrew channel (already in the default
-## Brewfile, installer/README.md) — no repackaging needed.
+# document conversion
+Requires:       pandoc-cli
+
+### Electronics and embedded development
+# microcontroller programming and debugging, serial consoles and logic
+# analyzers
+Requires:       avrdude
+Requires:       dfu-util
+Requires:       openocd
+Requires:       picocom
+Requires:       sigrok-cli
 
 ### Databases
 Requires:       sqlite3
@@ -783,9 +940,6 @@ Requires:       system-user-games
 ## see tc-benchtop-settings). mangohud/gamescope stay in the inventory for the
 ## gaming sub-pattern decision.
 Requires:       gamemode
-
-### User-added software
-Requires:       flatpak-remote-flathub
 
 %description base
 This is the Technicomp Benchtop Linux base system.
