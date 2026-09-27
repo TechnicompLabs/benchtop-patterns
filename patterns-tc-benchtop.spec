@@ -15,9 +15,7 @@
 # Please submit bugfixes or comments via https://bugs.technicomp.org/
 #
 # TCBL: renamed from patterns-tc-lab-linux (TC LabOS / Lab Linux / Workbench →
-# TC Benchtop Linux, 2026-08-15). Original preserved at
-# upstream/patterns-tc-lab-linux.spec.orig; every content change is marked
-# "## TCBL:" and catalogued in merge-review.md.
+# TC Benchtop Linux, 2026-08-15).
 
 
 %bcond_with betatest
@@ -30,7 +28,6 @@ License:        MIT
 Group:          Metapackages
 URL:            http://en.opensuse.org/Patterns
 Source0:        %name.rpmlintrc
-ExclusiveArch:  x86_64 aarch64
 
 %description
 This is an internal package that is used to create the patterns as part
@@ -54,7 +51,7 @@ Requires:       branding
 Requires:       build-key
 ## TCBL: distribution-release is satisfied by openSUSE/MicroOS release packages
 ## for now; M2 branding gate replaces this with our own tc-benchtop-release
-## (os-release identity — see docs/build-plan.md §2 and merge-review.md).
+## (os-release identity).
 Requires:       distribution-release
 Requires:       filesystem
 Requires:       tc-benchtop-settings
@@ -69,6 +66,16 @@ Requires:       ca-certificates
 Requires:       ca-certificates-mozilla
 Requires:       coreutils
 Requires:       coreutils-systemd
+# Command-line tools Benchtop guarantees. The base system's own packages
+# already require gawk, grep, sed, findutils, diffutils and file; patch is
+# under Build tools.
+Requires:       bc
+Requires:       tar
+Requires:       time
+Requires:       which
+# pipe progress (pv) and parallel jobs (GNU parallel)
+Requires:       pv
+Requires:       gnu_parallel
 Requires:       glibc
 Requires:       lastlog2
 Requires:       libnss_usrfiles2
@@ -94,7 +101,7 @@ Requires:       less
 Requires:       man
 Requires:       man-pages
 Requires:       vim
-#Requires:       neovim # Modern terminal environment — TCBL: stays commented; neovim rides the Homebrew channel (installer/README.md Brewfile)
+#Requires:       neovim # Modern terminal environment — TCBL: stays commented; neovim rides the Homebrew channel
 # modern terminal environment
 Requires:       tmux
 Requires:       wtmpdb
@@ -139,13 +146,13 @@ Requires:       plymouth-dracut
 # Boot Screens
 Requires:       plymouth
 ## TCBL: kernel-default is the M0/M1 placeholder; replaced by kernel-lts
-## (verbatim kernel.org 6.18.y, obs/README.md) once that package builds — M2
+## (verbatim kernel.org 6.18.y) once that package builds — M2
 ## images bake kernel-lts as the default boot entry.
 Requires:       kernel-default
 Requires:       ignition-dracut
 Requires:       combustion
 # Aeons partitions are defined to use systemd-repart
-# systemd-experimental is temproarily required for repart
+# systemd-experimental is temporarily required for repart
 Requires:       systemd-experimental
 ## Requires:       systemd-repart-branding-Aeon
 
@@ -250,7 +257,7 @@ Requires:       solaar-udev
 # #591535
 ## TCBL: gtk2-branding-openSUSE dropped — Distro Vision.md / Security
 ## Architecture.md: "Drop all GTK2, Python2". Nothing else in this pattern
-## should pull GTK2; CI closure check enforces it (build plan).
+## should pull GTK2.
 ## TCBL: remaining openSUSE branding packages are TEMPORARY (fine for private
 ## M1 testing; the M2 trademark gate replaces them with tc-benchtop-branding-*
 ## before anything public — openSUSE marks must not ship in a modified public
@@ -417,7 +424,7 @@ Requires:       canberra-gtk-play
 Requires:       adobe-sourcecodepro-fonts
 Requires:       adobe-sourcesanspro-fonts
 Requires:       adobe-sourceserifpro-fonts
-# Default fonts for Gnome 48
+# Fonts required by the supported GNOME release
 Requires:       adwaita-fonts
 Requires:       dejavu-fonts
 Requires:       ghostscript-fonts-other
@@ -430,8 +437,8 @@ Requires:       noto-coloremoji-fonts
 Requires:       noto-emoji-fonts
 Requires:       noto-sans-fonts
 ## TCBL additions — Fonts.md required set, names checked against Tumbleweed.
-## Atkinson Hyperlegible has no Tumbleweed font package; the faces
-## package-inventory.md lists as missing need first-party packages.
+## Faces from that set that Tumbleweed does not package need first-party
+## packages.
 Requires:       fira-code-fonts
 Requires:       gnu-unifont-otf-fonts
 Requires:       google-caladea-fonts
@@ -453,7 +460,7 @@ Requires:       ubuntu-fonts
 ## exclusion list. Dropped: OpenPrintingPPDs, epson-inkjet-printer-escpr,
 ## hplip-hpijs, printer-driver-brlaser. Added: ipp-usb (IPP-over-USB) and
 ## sane-airscan (eSCL/WSD driverless scanning). ghostscript retained as a
-## cups-filters dependency. Full rationale in merge-review.md.
+## cups-filters dependency.
 Requires:       bluez-cups
 Requires:       cups
 Requires:       cups-filters2
@@ -495,6 +502,8 @@ Requires:       avahi
 Requires:       avahi-utils
 Requires:       iproute2
 Requires:       iputils
+# pings many hosts at once; like ping, it runs without root
+Requires:       fping
 Requires:       ethtool
 Requires:       mtr
 Requires:       tcpdump
@@ -707,7 +716,8 @@ Requires:       python3-tk
 Requires:       ruby
 Requires:       ruby-devel
 
-# Perl (cpan is part of Perl)
+# Perl: cpan, and the headers and xsubpp that XS modules compile with, are
+# part of perl (Tumbleweed has no perl-devel)
 Requires:       perl
 
 # Java
@@ -732,9 +742,11 @@ Requires:       go
 Requires:       rust
 Requires:       cargo
 
-# JavaScript
+# JavaScript, with the Node headers: openSUSE's node-gyp compiles native
+# addons against them instead of downloading headers
 Requires:       nodejs-default
 Requires:       npm-default
+Requires:       nodejs-devel-default
 
 # PHP, with the extensions a default PHP build enables, which Tumbleweed
 # packages separately
@@ -757,12 +769,16 @@ Requires:       lua
 Requires:       lua-devel
 Requires:       lua54-luarocks
 
-# Tcl/Tk
+# Tcl/Tk, with the headers for C extensions
 Requires:       tcl
+Requires:       tcl-devel
 Requires:       tk
+Requires:       tk-devel
 
-# R
+# R, with the headers and build setup that CRAN packages with C, C++ or
+# Fortran code compile against
 Requires:       R-base
+Requires:       R-base-devel
 
 # GNU Octave: the interpreter without the Qt interface, which comes from
 # Flathub, and mkoctfile, which pkg install uses to compile extensions
@@ -790,8 +806,9 @@ Requires:       opam
 # Common Lisp
 Requires:       sbcl
 
-# Scheme
+# Scheme (Guile), with the headers for C extensions
 Requires:       guile
+Requires:       guile-devel
 
 # Racket
 Requires:       racket
@@ -874,10 +891,7 @@ Requires:       strace
 Requires:       valgrind
 Requires:       xxd
 
-### Security auditing and analysis
-# host auditing: OpenSCAP with the SCAP Security Guide policies
-Requires:       openscap-utils
-Requires:       scap-security-guide
+### Security analysis
 # malware signatures (YARA), firmware images (binwalk) and file metadata
 Requires:       yara
 Requires:       binwalk
@@ -909,7 +923,7 @@ Requires:       mariadb-client
 # Requires:       mongosh # OpenSUSE does not package this.
 # Requires:       mssql # OpenSUSE does not package this.
 ## TCBL: mongosh is available via Homebrew — Brewfile candidate rather than
-## OBS repackaging (merge-review.md).
+## OBS repackaging.
 Requires:       postgresql
 Requires:       psqlODBC
 Requires:       sqliteodbc
@@ -925,7 +939,7 @@ Requires:       rocminfo
 # Tumbleweed's llamacpp (ggml) has CPU, Vulkan, OpenCL and OpenVINO backends,
 # but no CUDA or ROCm.
 ## NVIDIA-side (CUDA) intentionally absent here — arrives with the nvidia
-## KMP against kernel-lts (obs/README.md).
+## KMP against kernel-lts.
 Requires:       llamacpp
 # the Vulkan backend (AMD, Intel and NVIDIA GPUs): libggml only recommends it,
 # and the image is built without recommended packages
@@ -937,8 +951,8 @@ Requires:       steam-devices
 Requires:       selinux-policy-targeted-gaming
 Requires:       system-user-games
 ## TCBL addition: gamemode — Gaming Mode.md (THP toggle scripts hook into it;
-## see tc-benchtop-settings). mangohud/gamescope stay in the inventory for the
-## gaming sub-pattern decision.
+## see tc-benchtop-settings). mangohud and gamescope wait for the gaming
+## sub-pattern decision.
 Requires:       gamemode
 
 %description base
