@@ -439,9 +439,11 @@ Requires:       noto-sans-fonts
 ## TCBL additions — Fonts.md required set, names checked against Tumbleweed.
 ## Faces from that set that Tumbleweed does not package need first-party
 ## packages.
+Requires:       courier-prime-fonts
 Requires:       fira-code-fonts
 Requires:       gnu-unifont-otf-fonts
 Requires:       google-caladea-fonts
+Requires:       google-merriweather-fonts
 Requires:       google-noto-sans-cjk-fonts
 Requires:       hack-fonts
 Requires:       ibm-plex-fonts
@@ -453,6 +455,17 @@ Requires:       redhat-overpass-fonts
 Requires:       saja-cascadia-code-fonts
 Requires:       texlive-tex-gyre-fonts
 Requires:       ubuntu-fonts
+# Noto for every script: google-noto-fonts requires all of openSUSE's Noto
+# fonts except the CJK and emoji ones. CJK: Hong Kong Chinese Sans (the other
+# four regions come with google-noto-sans-cjk-fonts above), and Serif for all
+# five regions.
+Requires:       google-noto-fonts
+Requires:       google-noto-sans-hk-fonts
+Requires:       google-noto-serif-hk-fonts
+Requires:       google-noto-serif-jp-fonts
+Requires:       google-noto-serif-kr-fonts
+Requires:       google-noto-serif-sc-fonts
+Requires:       google-noto-serif-tc-fonts
 
 ### Printing and scanning
 ## TCBL: printing rebuilt per Printing.md ("IPP driverless only") — the
@@ -799,8 +812,10 @@ Requires:       elixir-hex
 Requires:       ghc
 Requires:       cabal-install
 
-# OCaml
+# OCaml, with the compiler libraries a standard OCaml installation includes;
+# ppx packages (ppxlib) build against them
 Requires:       ocaml
+Requires:       ocaml-compiler-libs-devel
 Requires:       opam
 
 # Common Lisp
