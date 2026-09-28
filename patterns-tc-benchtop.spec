@@ -151,8 +151,9 @@ Requires:       plymouth
 Requires:       kernel-default
 Requires:       ignition-dracut
 Requires:       combustion
-# Aeons partitions are defined to use systemd-repart
-# systemd-experimental is temporarily required for repart
+# systemd components that Tumbleweed packages separately: the TPM2 measurement
+# and pcrlock services, sysupdate, oomd and others (systemd-repart itself comes
+# with udev)
 Requires:       systemd-experimental
 ## Requires:       systemd-repart-branding-Aeon
 
@@ -453,6 +454,9 @@ Requires:       jetbrains-mono-fonts
 Requires:       liberation-fonts
 Requires:       redhat-overpass-fonts
 Requires:       saja-cascadia-code-fonts
+# Gelasio (Georgia's metrics): only TeX Live packages it, but its OpenType
+# files are in the system font path, so every application can use them
+Requires:       texlive-gelasio-fonts
 Requires:       texlive-tex-gyre-fonts
 Requires:       ubuntu-fonts
 # Noto for every script: google-noto-fonts requires all of openSUSE's Noto
@@ -596,9 +600,14 @@ Requires:       gptfdisk
 Requires:       mdadm
 Requires:       lvm2
 Requires:       cryptsetup
+# disk imaging: partclone (what Clonezilla uses), and fsarchiver, whose
+# archives restore to partitions of a different size
+Requires:       partclone
+Requires:       fsarchiver
 # data recovery and file system forensics
 Requires:       gnu_ddrescue
 Requires:       testdisk
+Requires:       photorec
 Requires:       sleuthkit
 
 ### Backup
@@ -666,6 +675,8 @@ Requires:       clinfo
 Requires:       cpupower
 Requires:       dmidecode
 Requires:       edid-decode
+# counterfeit (fake-capacity) flash drives and memory cards
+Requires:       f3
 Requires:       flashrom
 Requires:       hdparm
 Requires:       hwinfo
@@ -691,6 +702,9 @@ Requires:       intel-gpu-tools
 # AMD GPU usage and sensors (tc-benchtop-settings-rpm leaves out its terminal
 # launcher)
 Requires:       amdgpu_top
+# Secure erase and sanitize come with the tools above: hdparm (ATA), nvme-cli
+# (NVMe) and sg3_utils (SCSI and SAS), plus blkdiscard (util-linux) and shred
+# (coreutils). config.kiwi installs MemTest86+ with its boot entry.
 
 ### Programming languages
 # C and C++ toolchain: pip, npm, cargo and go build native code with the
@@ -966,8 +980,9 @@ Requires:       steam-devices
 Requires:       selinux-policy-targeted-gaming
 Requires:       system-user-games
 ## TCBL addition: gamemode — Gaming Mode.md (THP toggle scripts hook into it;
-## see tc-benchtop-settings). mangohud and gamescope wait for the gaming
-## sub-pattern decision.
+## see tc-benchtop-settings). mangohud and gamescope come from Flathub, as the
+## Flatpak Vulkan layers org.freedesktop.Platform.VulkanLayer.MangoHud and
+## org.freedesktop.Platform.VulkanLayer.gamescope.
 Requires:       gamemode
 
 %description base
