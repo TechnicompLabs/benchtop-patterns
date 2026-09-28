@@ -454,8 +454,10 @@ Requires:       jetbrains-mono-fonts
 Requires:       liberation-fonts
 Requires:       redhat-overpass-fonts
 Requires:       saja-cascadia-code-fonts
-# Gelasio (Georgia's metrics): only TeX Live packages it, but its OpenType
-# files are in the system font path, so every application can use them
+# Atkinson Hyperlegible Next and Mono, and Gelasio (Georgia's metrics): only
+# TeX Live packages them, but their OpenType files are in the system font path,
+# so every application can use them
+Requires:       texlive-atkinson-fonts
 Requires:       texlive-gelasio-fonts
 Requires:       texlive-tex-gyre-fonts
 Requires:       ubuntu-fonts
@@ -536,9 +538,9 @@ Requires:       bind-utils
 Requires:       netcat-openbsd
 Requires:       socat
 Requires:       whois
-# Nmap is in openSUSE's non-free repository (openSUSE:Factory:NonFree, Nmap
-# Public Source License), which the image build does not use
-#Requires:       nmap
+# Nmap (Nmap Public Source License): openSUSE builds it in
+# openSUSE:Factory:NonFree, and home:technicomp:benchtop links that package
+Requires:       nmap
 
 ### Remote access and management
 # for desktop remote access
