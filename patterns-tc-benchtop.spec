@@ -437,14 +437,13 @@ Requires:       google-roboto-fonts
 Requires:       noto-coloremoji-fonts
 Requires:       noto-emoji-fonts
 Requires:       noto-sans-fonts
-## TCBL additions — Fonts.md required set, names checked against Tumbleweed.
-## Faces from that set that Tumbleweed does not package need first-party
-## packages.
-Requires:       courier-prime-fonts
+## TCBL additions — the curated font stack in Fonts.md, and the fonts that
+## fontconfig's own metric-compatible aliases (30-metric-aliases.conf) use in
+## place of common Microsoft and PostScript fonts (Caladea, Gelasio,
+## Liberation, TeX Gyre). Names checked against Tumbleweed.
 Requires:       fira-code-fonts
 Requires:       gnu-unifont-otf-fonts
 Requires:       google-caladea-fonts
-Requires:       google-merriweather-fonts
 Requires:       google-noto-sans-cjk-fonts
 Requires:       hack-fonts
 Requires:       ibm-plex-fonts
@@ -452,7 +451,6 @@ Requires:       intel-one-mono-fonts
 Requires:       inter-fonts
 Requires:       jetbrains-mono-fonts
 Requires:       liberation-fonts
-Requires:       redhat-overpass-fonts
 Requires:       saja-cascadia-code-fonts
 # Atkinson Hyperlegible Next and Mono, and Gelasio (Georgia's metrics): only
 # TeX Live packages them, but their OpenType files are in the system font path,
@@ -981,9 +979,9 @@ Requires:       libggml-vulkan
 Requires:       steam-devices
 Requires:       selinux-policy-targeted-gaming
 Requires:       system-user-games
-## TCBL addition: gamemode — Gaming Mode.md (THP toggle scripts hook into it;
-## see tc-benchtop-settings). mangohud and gamescope come from Flathub, as the
-## Flatpak Vulkan layers org.freedesktop.Platform.VulkanLayer.MangoHud and
+## TCBL addition: gamemode — Gaming Mode.md. mangohud and gamescope come from
+## Flathub, as the Flatpak Vulkan layers
+## org.freedesktop.Platform.VulkanLayer.MangoHud and
 ## org.freedesktop.Platform.VulkanLayer.gamescope.
 Requires:       gamemode
 
