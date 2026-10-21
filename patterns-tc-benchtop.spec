@@ -161,6 +161,12 @@ Requires:       systemd-experimental
 Requires:       transactional-update
 Requires:       transactional-update-zypp-config
 Requires:       zypper
+## TCBL: the Tumbleweed repositories (repo-oss and the rest), via openSUSE's
+## zypp service, so installed systems update from Tumbleweed. repo-tcbl
+## (tc-benchtop-settings) layers on top at priority 90. The concrete flavor is
+## required because Leap, MicroOS, Slowroll and Tumbleweed all provide
+## openSUSE-repos, which would otherwise be a have-choice.
+Requires:       openSUSE-repos-Tumbleweed
 # zypper ps is useless in transactional mode. It also checks for
 # /run/reboot-needed though which is created by transactional-update
 Requires:       zypper-needs-restarting
