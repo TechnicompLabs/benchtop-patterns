@@ -254,6 +254,30 @@ Requires:       solaar-udev
 #Requires:       supergfxctl
 #Requires:       asusctl
 
+### GPU and NPU compute
+# AMD: ROCm, with HIP and OpenCL. HIP comes with its compiler (hipcc) and
+# ROCm's own LLVM.
+Requires:       libnuma1
+Requires:       librocm-core1
+Requires:       rocm-hip
+Requires:       rocm-opencl
+Requires:       rocm-smi
+Requires:       rocm-clinfo
+Requires:       rocminfo
+# Intel: the compute runtime for GPUs (OpenCL and Level Zero), and the NPU
+# driver with its firmware
+Requires:       intel-opencl
+Requires:       level-zero
+Requires:       libze_intel_gpu1
+Requires:       libze_intel_npu1
+Requires:       linux-npu-driver
+# Mesa's OpenCL (Rusticl), for GPUs that the runtimes above do not support. It
+# lists AMD and Intel GPUs only when RUSTICL_ENABLE names their driver
+# (radeonsi, iris).
+Requires:       Mesa-libRusticlOpenCL
+## NVIDIA-side (CUDA) intentionally absent here — arrives with the nvidia
+## KMP against kernel-lts.
+
 ### Desktop
 # #591535
 ## TCBL: gtk2-branding-openSUSE dropped — Distro Vision.md / Security
@@ -540,34 +564,21 @@ Requires:       whois
 # openSUSE:Factory:NonFree, and home:technicomp:benchtop links that package
 Requires:       nmap
 
-### Remote access and management
+### Remote access
 # for desktop remote access
 Requires:       gnome-remote-desktop
-# for shell remote access
+# for shell remote access (the SSH server is off until enabled)
 Requires:       openssh
 # mobile shell: sessions survive roaming, sleep and changing networks
 Requires:       mosh
-Requires:       cockpit
-# opens the firewall for Cockpit's web console (port 9090), so Cockpit is
-# reachable from other machines; the firewall panel itself is in
-# cockpit-networkmanager
-Requires:       cockpit-firewalld
-Requires:       cockpit-machines
-Requires:       cockpit-networkmanager
-Requires:       cockpit-podman
-Requires:       cockpit-selinux
-Requires:       cockpit-storaged
 
 ### File sharing, remote file systems and synchronization
-# Windows file sharing: the Samba server (off until configured) and its client
-# tools (smbclient)
-Requires:       samba
+# Windows file sharing: the client tools (smbclient)
 Requires:       samba-client
 # Support CIFS mounting via mount boo#1216138
 Requires:       cifs-utils
-# NFS client and server (the server is off until configured), and NFSv4 ACLs
+# NFS client, and NFSv4 ACLs
 Requires:       nfs-client
-Requires:       nfs-kernel-server
 Requires:       nfs4-acl-tools
 # SSH file system, and synchronization
 Requires:       sshfs
@@ -627,20 +638,12 @@ Requires:       zip
 Requires:       mkisofs
 Requires:       udftools
 
-### Virtualization, containers and infrastructure
+### Virtualization and containers
 Requires:       spice-vdagent
 Requires:       qemu-guest-agent
 # Container / Distrobox boo#1222909
 Requires:       distrobox
 Requires:       podman
-Requires:       buildah
-Requires:       helm
-Requires:       kubernetes-client
-Requires:       kustomize
-Requires:       skopeo
-Requires:       opentofu
-# configuration management; collections come from ansible-galaxy
-Requires:       ansible-core
 
 ### System monitoring
 Requires:       htop
@@ -706,11 +709,179 @@ Requires:       amdgpu_top
 # (NVMe) and sg3_utils (SCSI and SAS), plus blkdiscard (util-linux) and shred
 # (coreutils). config.kiwi installs MemTest86+ with its boot entry.
 
-### Programming languages
-# C and C++ toolchain: pip, npm, cargo and go build native code with the
-# system compiler
+### Build tools
+# C and C++ compilers: Homebrew requires a system compiler, and pip, npm,
+# cargo and go build native code with it
 Requires:       gcc
 Requires:       gcc-c++
+Requires:       autoconf
+Requires:       automake
+Requires:       bison
+# compiler cache
+Requires:       ccache
+Requires:       cmake-full
+# builds Flatpaks from manifests; runtimes and SDKs download per user
+Requires:       flatpak-builder
+# flatpak-builder extracts zip sources with bsdunzip, but openSUSE's package
+# requires unzip instead
+Requires:       bsdtar
+Requires:       flex
+Requires:       libtool
+Requires:       make
+Requires:       meson
+Requires:       ninja
+Requires:       patch
+Requires:       pkgconf-pkg-config
+
+### Version control
+Requires:       git
+# large files (media, datasets, model weights) kept outside the repository;
+# some Flatpak manifest sources use it too
+Requires:       git-lfs
+# GitHub's command-line tool
+Requires:       gh
+# Jujutsu (jj), a Git-compatible version control system
+Requires:       jujutsu
+# other version control systems, current and historical
+Requires:       mercurial
+Requires:       subversion
+Requires:       fossil
+Requires:       cvs
+Requires:       rcs
+# Breezy (Bazaar's maintained successor) is not in Tumbleweed; to be packaged
+#Requires:       breezy
+
+### Debugging and binary analysis
+Requires:       binutils
+Requires:       checksec
+Requires:       elfutils
+Requires:       gdb
+Requires:       gdbserver
+Requires:       hexedit
+Requires:       ltrace
+Requires:       patchelf
+Requires:       pax-utils
+Requires:       rizin
+# Ghidra's decompiler for rizin
+Requires:       rz-ghidra
+Requires:       strace
+Requires:       valgrind
+Requires:       xxd
+
+### Security analysis
+# malware signatures (YARA), firmware images (binwalk) and file metadata
+Requires:       yara
+Requires:       binwalk
+Requires:       exiftool
+
+### Data processing and documents
+Requires:       jq
+# CSV, TSV and JSON processing (mlr), in place of xsv, which is unmaintained
+# upstream
+Requires:       miller
+Requires:       yq
+# document conversion
+Requires:       pandoc-cli
+
+### Electronics and embedded development
+# microcontroller programming and debugging, serial consoles and logic
+# analyzers
+Requires:       avrdude
+Requires:       dfu-util
+Requires:       openocd
+Requires:       picocom
+Requires:       sigrok-cli
+
+### Databases
+Requires:       sqlite3
+
+### AI and language models
+# Tumbleweed's llamacpp (ggml) has CPU, Vulkan, OpenCL and OpenVINO backends,
+# but no CUDA or ROCm.
+Requires:       llamacpp
+# the Vulkan backend (AMD, Intel and NVIDIA GPUs): libggml only recommends it,
+# and the image is built without recommended packages
+Requires:       libggml-vulkan
+
+### Gaming
+# add steam-devices
+Requires:       steam-devices
+Requires:       selinux-policy-targeted-gaming
+Requires:       system-user-games
+## TCBL addition: gamemode — Gaming Mode.md. mangohud and gamescope come from
+## Flathub, as the Flatpak Vulkan layers
+## org.freedesktop.Platform.VulkanLayer.MangoHud and
+## org.freedesktop.Platform.VulkanLayer.gamescope.
+Requires:       gamemode
+
+%description base
+This is the Technicomp Benchtop Linux base system.
+
+%package admin
+Summary:        Technicomp Benchtop Linux remote administration and servers
+Group:          Metapackages
+Provides:       pattern() = tc-benchtop_admin
+Provides:       pattern-category() = Benchtop
+Provides:       pattern-icon() = pattern-kubic
+Provides:       pattern-order() = 9210
+Requires:       pattern() = tc-benchtop_base
+
+### Web console
+Requires:       cockpit
+# opens the firewall for Cockpit's web console (port 9090), so Cockpit is
+# reachable from other machines; the firewall panel itself is in
+# cockpit-networkmanager
+Requires:       cockpit-firewalld
+Requires:       cockpit-machines
+Requires:       cockpit-networkmanager
+Requires:       cockpit-podman
+Requires:       cockpit-selinux
+Requires:       cockpit-storaged
+
+### File servers
+# Windows file sharing (Samba) and NFS servers, both off until configured
+Requires:       samba
+Requires:       nfs-kernel-server
+
+### Containers and infrastructure
+Requires:       buildah
+Requires:       helm
+Requires:       kubernetes-client
+Requires:       kustomize
+Requires:       skopeo
+Requires:       opentofu
+# configuration management; collections come from ansible-galaxy
+Requires:       ansible-core
+
+### Database clients
+Requires:       libtdsodbc0
+Requires:       mariadb-connector-odbc
+Requires:       mariadb-client
+# Requires:       mongosh # OpenSUSE does not package this.
+# Requires:       mssql # OpenSUSE does not package this.
+## TCBL: mongosh is available via Homebrew — Brewfile candidate rather than
+## OBS repackaging.
+Requires:       postgresql
+Requires:       psqlODBC
+Requires:       sqliteodbc
+Requires:       unixODBC
+
+%description admin
+Remote administration and servers for Technicomp Benchtop Linux: Cockpit,
+the Samba and NFS servers, container image and infrastructure tools, and
+database clients.
+
+%package languages
+Summary:        Technicomp Benchtop Linux programming languages
+Group:          Metapackages
+Provides:       pattern() = tc-benchtop_languages
+Provides:       pattern-category() = Benchtop
+Provides:       pattern-icon() = pattern-kubic
+Provides:       pattern-order() = 9220
+Requires:       pattern() = tc-benchtop_base
+
+### Programming languages
+# Clang and LLVM; GCC's C and C++ compilers are in the base pattern
 Requires:       clang
 Requires:       llvm
 Requires:       lld
@@ -862,131 +1033,16 @@ Requires:       nim
 
 # Dart
 # TODO: evaluate/package Dart SDK for Benchtop/OBS.
-# No official Tumbleweed package currently suitable for the base image.
+# No official Tumbleweed package currently suitable.
 
 # Swift
 # TODO: evaluate/package the upstream Swift toolchain for Benchtop/OBS
 # if native Linux Swift is considered part of the supported language set.
 
-### Build tools
-Requires:       autoconf
-Requires:       automake
-Requires:       bison
-# compiler cache
-Requires:       ccache
-Requires:       cmake-full
-# builds Flatpaks from manifests; runtimes and SDKs download per user
-Requires:       flatpak-builder
-Requires:       flex
-Requires:       libtool
-Requires:       make
-Requires:       meson
-Requires:       ninja
-Requires:       patch
-Requires:       pkgconf-pkg-config
-
-### Version control
-Requires:       git
-# large files (media, datasets, model weights) kept outside the repository;
-# some Flatpak manifest sources use it too
-Requires:       git-lfs
-# GitHub's command-line tool
-Requires:       gh
-# Jujutsu (jj), a Git-compatible version control system
-Requires:       jujutsu
-# other version control systems, current and historical
-Requires:       mercurial
-Requires:       subversion
-Requires:       fossil
-Requires:       cvs
-Requires:       rcs
-# Breezy (Bazaar's maintained successor) is not in Tumbleweed; to be packaged
-#Requires:       breezy
-
-### Debugging and binary analysis
-Requires:       binutils
-Requires:       checksec
-Requires:       elfutils
-Requires:       gdb
-Requires:       gdbserver
-Requires:       hexedit
-Requires:       ltrace
-Requires:       patchelf
-Requires:       pax-utils
-Requires:       rizin
-# Ghidra's decompiler for rizin
-Requires:       rz-ghidra
-Requires:       strace
-Requires:       valgrind
-Requires:       xxd
-
-### Security analysis
-# malware signatures (YARA), firmware images (binwalk) and file metadata
-Requires:       yara
-Requires:       binwalk
-Requires:       exiftool
-
-### Data processing and documents
-Requires:       jq
-# CSV, TSV and JSON processing (mlr), in place of xsv, which is unmaintained
-# upstream
-Requires:       miller
-Requires:       yq
-# document conversion
-Requires:       pandoc-cli
-
-### Electronics and embedded development
-# microcontroller programming and debugging, serial consoles and logic
-# analyzers
-Requires:       avrdude
-Requires:       dfu-util
-Requires:       openocd
-Requires:       picocom
-Requires:       sigrok-cli
-
-### Databases
-Requires:       sqlite3
-Requires:       libtdsodbc0
-Requires:       mariadb-connector-odbc
-Requires:       mariadb-client
-# Requires:       mongosh # OpenSUSE does not package this.
-# Requires:       mssql # OpenSUSE does not package this.
-## TCBL: mongosh is available via Homebrew — Brewfile candidate rather than
-## OBS repackaging.
-Requires:       postgresql
-Requires:       psqlODBC
-Requires:       sqliteodbc
-Requires:       unixODBC
-
-### AI and language models
-Requires:       libnuma1
-Requires:       librocm-core1
-Requires:       rocm-hip
-Requires:       rocm-smi
-Requires:       rocm-clinfo
-Requires:       rocminfo
-# Tumbleweed's llamacpp (ggml) has CPU, Vulkan, OpenCL and OpenVINO backends,
-# but no CUDA or ROCm.
-## NVIDIA-side (CUDA) intentionally absent here — arrives with the nvidia
-## KMP against kernel-lts.
-Requires:       llamacpp
-# the Vulkan backend (AMD, Intel and NVIDIA GPUs): libggml only recommends it,
-# and the image is built without recommended packages
-Requires:       libggml-vulkan
-
-### Gaming
-# add steam-devices
-Requires:       steam-devices
-Requires:       selinux-policy-targeted-gaming
-Requires:       system-user-games
-## TCBL addition: gamemode — Gaming Mode.md. mangohud and gamescope come from
-## Flathub, as the Flatpak Vulkan layers
-## org.freedesktop.Platform.VulkanLayer.MangoHud and
-## org.freedesktop.Platform.VulkanLayer.gamescope.
-Requires:       gamemode
-
-%description base
-This is the Technicomp Benchtop Linux base system.
+%description languages
+Programming languages for Technicomp Benchtop Linux, with their package
+managers and development files. The C and C++ compilers are in the base
+pattern.
 
 %prep
 # empty on purpose
@@ -998,6 +1054,8 @@ This is the Technicomp Benchtop Linux base system.
 mkdir -p %{buildroot}%{_docdir}/patterns-tc-benchtop/
 PATTERNS='
     base
+    admin
+    languages
 '
 for i in $PATTERNS; do
     echo "This file marks the pattern $i to be installed." \
@@ -1007,5 +1065,13 @@ done
 %files base
 %dir %{_docdir}/patterns-tc-benchtop
 %{_docdir}/patterns-tc-benchtop/base.txt
+
+%files admin
+%dir %{_docdir}/patterns-tc-benchtop
+%{_docdir}/patterns-tc-benchtop/admin.txt
+
+%files languages
+%dir %{_docdir}/patterns-tc-benchtop
+%{_docdir}/patterns-tc-benchtop/languages.txt
 
 %changelog
