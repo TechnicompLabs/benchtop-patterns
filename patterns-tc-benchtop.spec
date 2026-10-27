@@ -708,8 +708,8 @@ Requires:       vulkan-tools
 %ifarch %ix86 x86_64
 Requires:       intel-gpu-tools
 %endif
-# AMD GPU usage and sensors (tc-benchtop-settings-rpm leaves out its terminal
-# launcher)
+# AMD GPU usage and sensors (tc-benchtop-settings-rpm leaves out its
+# launchers)
 Requires:       amdgpu_top
 # Secure erase and sanitize come with the tools above: hdparm (ATA), nvme-cli
 # (NVMe) and sg3_utils (SCSI and SAS), plus blkdiscard (util-linux) and shred
