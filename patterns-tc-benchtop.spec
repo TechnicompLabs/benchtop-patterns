@@ -49,9 +49,8 @@ Requires:       pattern() = update_test
 ### Base system
 Requires:       branding
 Requires:       build-key
-## TCBL: distribution-release is satisfied by openSUSE/MicroOS release packages
-## for now; M2 branding gate replaces this with our own tc-benchtop-release
-## (os-release identity).
+## TCBL: distribution-release is openSUSE-release, built in repo-tcbl from a
+## link to openSUSE's with only NAME and PRETTY_NAME in os-release changed.
 Requires:       distribution-release
 Requires:       filesystem
 Requires:       tc-benchtop-settings
@@ -446,6 +445,9 @@ Requires:       pipewire-alsa
 Requires:       pipewire-pulseaudio
 # Add JACK audio support
 Requires:       pipewire-jack
+# realtime scheduling for PipeWire and JACK clients (RealtimeKit, which D-Bus
+# starts when a program asks for it)
+Requires:       rtkit
 # Support UCM Profiles boo#1218510
 Requires:       alsa-ucm-conf
 Requires:       canberra-gtk-play
