@@ -54,6 +54,19 @@ Requires:       build-key
 Requires:       distribution-release
 Requires:       filesystem
 Requires:       tc-benchtop-settings
+## TCBL: packages that are not part of TCBL, which openSUSE packages would
+## otherwise bring in through optional dependencies (supplements), wherever the
+## solver follows them, as automatic updates do. Supplements are optional, so
+## with these conflicts the solver leaves the packages out instead of failing.
+# Flathub is added to each user's own Flatpak installation
+# (tc-benchtop-settings' tcbl-flathub.service); flatpak-remote-flathub adds it
+# system-wide, where installing apps needs an administrator, and supplements
+# flatpak. Adding the remote by hand (flatpak remote-add --system) still works.
+Conflicts:      flatpak-remote-flathub
+# TCBL is administered with Cockpit, not YaST. yast2-samba-server supplements
+# samba (bnc#386473), so with the admin pattern's Samba it would add YaST's
+# core, libraries and, through their own supplements, most of its modules.
+Conflicts:      yast2
 Requires:       /usr/bin/hostname
 Requires:       aaa_base
 Requires:       bash
