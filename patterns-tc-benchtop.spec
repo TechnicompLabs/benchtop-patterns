@@ -665,6 +665,10 @@ Requires:       qemu-guest-agent
 # Container / Distrobox boo#1222909
 Requires:       distrobox
 Requires:       podman
+# crun, the OCI runtime written in C, beside runc, which podman requires;
+# podman runs runc unless told otherwise (openSUSE's containers.conf.d sets
+# runtime = "runc"), and crun with --runtime crun
+Requires:       crun
 
 ### System monitoring
 Requires:       htop
