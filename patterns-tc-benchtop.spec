@@ -461,6 +461,10 @@ Requires:       pipewire-jack
 # realtime scheduling for PipeWire and JACK clients (RealtimeKit, which D-Bus
 # starts when a program asks for it)
 Requires:       rtkit
+# process priorities: the sound server and the focused application first
+# (System76 Scheduler, with the GNOME extension that reports the focused window)
+Requires:       gnome-shell-extension-benchtop-focus-priority
+Requires:       system76-scheduler
 # Support UCM Profiles boo#1218510
 Requires:       alsa-ucm-conf
 Requires:       canberra-gtk-play
