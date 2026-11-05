@@ -417,6 +417,22 @@ Requires:       gvfs-backend-goa
 Requires:       gvfs-fuse
 # We need the icons to work
 Requires:       adwaita-icon-theme
+# Themes, all installed (benchtop-themes, each built from its upstream on
+# GitHub): adw-gtk3, so GTK 3 applications match libadwaita ones; Yaru,
+# Ubuntu's themes, newer than openSUSE's yaru-theme; and Kvantum with
+# KvLibadwaita and KvYaru-Colors for Qt applications
+Requires:       adw-gtk3-theme
+Requires:       gnome-shell-theme-yaru
+Requires:       gtk3-metatheme-yaru
+Requires:       gtk4-metatheme-yaru
+Requires:       gtksourceview-theme-yaru
+Requires:       kvantum-qt6
+Requires:       kvantum-theme-libadwaita
+Requires:       kvantum-theme-yaru-colors
+Requires:       metacity-theme-yaru
+Requires:       metatheme-yaru-common
+Requires:       sound-theme-yaru
+Requires:       yaru-icon-theme
 # We need this for accessability and the lack of it causes big performance issues (boo#1204564)
 Requires:       at-spi2-core
 # So that GNOME keyring works
@@ -508,6 +524,10 @@ Requires:       texlive-atkinson-fonts
 Requires:       texlive-gelasio-fonts
 Requires:       texlive-tex-gyre-fonts
 Requires:       ubuntu-fonts
+# Ubuntu Sans and Ubuntu Sans Mono (benchtop-themes), their variable fonts;
+# the static ones are separate packages that conflict with them
+Requires:       ubuntu-sans-fonts
+Requires:       ubuntu-sans-mono-fonts
 # Noto for every script: google-noto-fonts requires all of openSUSE's Noto
 # fonts except the CJK and emoji ones. CJK: Hong Kong Chinese Sans (the other
 # four regions come with google-noto-sans-cjk-fonts above), and Serif for all
