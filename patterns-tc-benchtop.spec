@@ -428,6 +428,8 @@ Requires:       gnome-shell-theme-yaru
 Requires:       gtk3-metatheme-yaru
 Requires:       gtk4-metatheme-yaru
 Requires:       gtksourceview-theme-yaru
+# Kvantum for Qt 6 and Qt 5 applications on the host
+Requires:       kvantum-qt5
 Requires:       kvantum-qt6
 Requires:       kvantum-theme-libadwaita
 Requires:       kvantum-theme-yaru-colors
