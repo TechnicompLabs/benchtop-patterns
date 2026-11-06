@@ -59,9 +59,9 @@ Requires:       tc-benchtop-settings
 ## solver follows them, as automatic updates do. Supplements are optional, so
 ## with these conflicts the solver leaves the packages out instead of failing.
 # Flathub is added to each user's own Flatpak installation
-# (tc-benchtop-settings' tcbl-flathub.service); flatpak-remote-flathub adds it
-# system-wide, where installing apps needs an administrator, and supplements
-# flatpak. Adding the remote by hand (flatpak remote-add --system) still works.
+# (tc-benchtop-settings' configure-user-flathub.service);
+# flatpak-remote-flathub adds it system-wide, where installing apps needs an
+# administrator, and supplements flatpak. Adding the remote by hand (flatpak remote-add --system) still works.
 Conflicts:      flatpak-remote-flathub
 # TCBL is administered with Cockpit, not YaST. yast2-samba-server supplements
 # samba (bnc#386473), so with the admin pattern's Samba it would add YaST's
@@ -357,8 +357,8 @@ Requires:       gnome-session-default-session
 Requires:       gnome-session-wayland
 # boo#1090117
 Requires:       flatpak
-# Flathub is added to each user's own installation (tcbl-flathub.service in
-# tc-benchtop-settings), not system-wide; config.kiwi keeps openSUSE's
+# Flathub is added to each user's own installation
+# (configure-user-flathub.service in tc-benchtop-settings), not system-wide; config.kiwi keeps openSUSE's
 # flatpak-remote-flathub out
 ## Requires:       gnome-branding-Aeon
 Requires:       gnome-color-manager
