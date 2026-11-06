@@ -236,7 +236,7 @@ Requires:       tuned
 Requires:       tuned-ppd
 Requires:       switcheroo-control
 # x86_64_v3 support is mandatory
-# tc-benchtop-settings' tcbl-x86-64-v3.service installs the x86-64-v3
+# tc-benchtop-settings' x86-64-v3-libraries.service installs the x86-64-v3
 # optimized libraries after automatic updates, on CPUs that support them
 # Support screen rotation boo#1222711
 Requires:       iio-sensor-proxy
