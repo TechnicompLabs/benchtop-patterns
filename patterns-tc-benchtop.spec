@@ -422,6 +422,8 @@ Requires:       adwaita-icon-theme
 # Ubuntu's themes, newer than openSUSE's yaru-theme; and Kvantum with
 # KvLibadwaita and KvYaru-Colors for Qt applications
 Requires:       adw-gtk3-theme
+# switches the GTK 3 and Kvantum themes to dark with the system's style
+Requires:       gnome-shell-extension-benchtop-theme-switcher
 Requires:       gnome-shell-theme-yaru
 Requires:       gtk3-metatheme-yaru
 Requires:       gtk4-metatheme-yaru
