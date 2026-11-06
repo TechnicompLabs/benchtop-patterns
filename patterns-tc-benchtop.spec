@@ -397,7 +397,10 @@ Requires:       totem-video-thumbnailer
 Requires:       gnome-control-center-users
 Requires:       gnome-control-center-user-faces
 # So users can configure Parental controls
-Requires:       malcontent-control
+## TCBL: malcontent-control dropped. openSUSE deleted malcontent from Factory
+## on October 30, 2026, and Factory's gnome-control-center is built without
+## malcontent, so TCBL has no parental controls.
+## Requires:       malcontent-control
 # we need something for xdg-su
 Requires:       gnome-shell-search-provider-nautilus
 Requires:       libgnomesu
