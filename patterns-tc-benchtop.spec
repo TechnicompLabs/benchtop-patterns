@@ -113,6 +113,7 @@ Requires:       less
 Requires:       man
 Requires:       man-pages
 Requires:       vim
+Requires:       nano
 #Requires:       neovim # Modern terminal environment — TCBL: stays commented; neovim rides the Homebrew channel
 # modern terminal environment
 Requires:       tmux
