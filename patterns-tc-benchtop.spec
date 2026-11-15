@@ -135,6 +135,29 @@ Conflicts:      libuna1-mini
 Obsoletes:      suse-build-key < 12.1
 Requires:       yast2-logs
 Requires:       bash-completion
+## TCBL: shell completions that openSUSE's packages bring only as optional
+## supplements, which updates do not install (solver.onlyRequires)
+Requires:       bluez-zsh-completion
+Requires:       borgbackup-bash-completion
+Requires:       borgbackup-zsh-completion
+Requires:       bpftool-bash-completion
+Requires:       cpupower-bash-completion
+Requires:       curl-zsh-completion
+Requires:       firewalld-bash-completion
+Requires:       firewalld-zsh-completion
+Requires:       fwupd-bash-completion
+Requires:       gh-bash-completion
+Requires:       gh-zsh-completion
+Requires:       jujutsu-bash-completion
+Requires:       jujutsu-zsh-completion
+Requires:       nvme-cli-bash-completion
+Requires:       nvme-cli-zsh-completion
+Requires:       partclone-bash-completion
+Requires:       perf-bash-completion
+Requires:       sdbootutil-bash-completion
+Requires:       subversion-bash-completion
+Requires:       wireplumber-bash-completion
+Requires:       wireplumber-zsh-completion
 Requires:       wget
 Requires:       systemd-coredump
 Requires:       systemd-zram-service
@@ -260,6 +283,8 @@ Requires:       bluez-obexd
 # Support wacom tablets
 Requires:       libinput-udev
 Requires:       ratbagd
+## TCBL: ratbagctl, ratbagd's command line (recommended only)
+Requires:       libratbag-tools
 # rules only: until openSUSE takes the change, home:technicomp:benchtop carries a
 # branch of OpenRGB whose udev-rules subpackage does not require the app
 Requires:       OpenRGB-udev-rules
@@ -382,6 +407,11 @@ Requires:       gnome-shell-calendar
 Requires:       ffmpegthumbnailer
 Requires:       gdk-pixbuf-loader-jxl
 Requires:       gdk-pixbuf-loader-libheif
+## TCBL: libheif's decoders for HEIC and AVIF images (supplements only)
+Requires:       libheif-dav1d
+Requires:       libheif-ffmpeg
+Requires:       libheif-jpeg
+Requires:       libheif-openjpeg
 Requires:       glycin-loaders
 Requires:       gnome-directory-thumbnailer
 Requires:       gnome-directory-thumbnailer-lang
@@ -417,6 +447,8 @@ Requires:       seahorse-daemon
 # So Trash and mounting USB sticks work in Nautilus
 Requires:       gvfs-backends
 Requires:       gvfs-backend-afc
+## TCBL: the iPhone USB connection that gvfs-backend-afc uses (recommended only)
+Requires:       usbmuxd
 Requires:       gvfs-backend-goa
 Requires:       gvfs-fuse
 # We need the icons to work
@@ -440,6 +472,8 @@ Requires:       kvantum-theme-yaru-colors
 Requires:       metacity-theme-yaru
 Requires:       metatheme-yaru-common
 Requires:       sound-theme-yaru
+## TCBL: GNOME's standard event sounds (recommended only)
+Requires:       sound-theme-freedesktop
 Requires:       yaru-icon-theme
 # We need this for accessability and the lack of it causes big performance issues (boo#1204564)
 Requires:       at-spi2-core
@@ -894,11 +928,18 @@ Requires:       cockpit-networkmanager
 Requires:       cockpit-podman
 Requires:       cockpit-selinux
 Requires:       cockpit-storaged
+## TCBL: what virtual machines need beyond what cockpit-machines requires:
+## UEFI firmware, USB passthrough and the SPICE viewer (recommended only)
+Requires:       ovmf
+Requires:       qemu-hw-usb-host
+Requires:       qemu-ui-spice-app
 
 ### File servers
 # Windows file sharing (Samba) and NFS servers, both off until configured
 Requires:       samba
 Requires:       nfs-kernel-server
+## TCBL: Windows network discovery for the Samba shares (supplements only)
+Requires:       wsdd
 
 ### Containers and infrastructure
 Requires:       buildah
@@ -906,6 +947,11 @@ Requires:       helm
 Requires:       kubernetes-client
 Requires:       kustomize
 Requires:       skopeo
+## TCBL: their shell completions (supplements only)
+Requires:       helm-bash-completion
+Requires:       helm-zsh-completion
+Requires:       skopeo-bash-completion
+Requires:       skopeo-zsh-completion
 Requires:       opentofu
 # configuration management; collections come from ansible-galaxy
 Requires:       ansible-core
