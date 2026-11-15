@@ -278,6 +278,13 @@ Requires:       intel-media-driver
 # Support fingerprint scanners boo#1212071
 Requires:       fprintd
 Requires:       fprintd-pam
+## TCBL: smart-card login (GDM's gdm-smartcard uses pam_pkcs11), with the
+## PC/SC daemon, the USB card-reader driver (CCID, YubiKeys among them) and
+## OpenSC's PKCS#11 module; each system still configures /etc/pam_pkcs11
+Requires:       pam_pkcs11
+Requires:       pcsc-lite
+Requires:       pcsc-ccid
+Requires:       opensc
 # Support bluetooth filetransfer boo#1225682
 Requires:       bluez-obexd
 # Support wacom tablets
