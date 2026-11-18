@@ -577,6 +577,9 @@ Requires:       ubuntu-fonts
 # the static ones are separate packages that conflict with them
 Requires:       ubuntu-sans-fonts
 Requires:       ubuntu-sans-mono-fonts
+# Sarasa Gothic (benchtop-themes): CJK programming fonts, every family and
+# orthography; installed, not a default
+Requires:       sarasa-gothic-fonts
 # Noto for every script: google-noto-fonts requires all of openSUSE's Noto
 # fonts except the CJK and emoji ones. CJK: Hong Kong Chinese Sans (the other
 # four regions come with google-noto-sans-cjk-fonts above), and Serif for all
